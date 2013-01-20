@@ -7,10 +7,8 @@
 ]]
 
 -- Modules
+require("game")
 require("map")
-
--- Globals
-gamePaused = false
 
 -- Löve's General Callback Functions
 function love.load()
@@ -21,10 +19,10 @@ end
 
 function love.focus(f)
 	if not f then
-		gamePaused = true
+		game.paused = true
 		print(love.graphics.getCaption().." lost focus!", 1, 1)
 	else
-		gamePaused = false
+		game.paused = false
 		print(love.graphics.getCaption().." gained focus!", 1, 1)
 	end
 end
@@ -35,7 +33,7 @@ end
 
 -- Love's Game Loop Callbacks
 function love.update(dt)
-	if gamePaused then return end
+	if game.paused then return end
 
 	-- Game tick code here.
 	if love.keyboard.isDown("up")  then
