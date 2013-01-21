@@ -23,94 +23,82 @@
 ]]
 
 -- Globals
-map = {}
+Map = {}		-- A table to hold our class methods.
 
-function loadMap()
-	-- Loads a map from a map file.
-
-	-- We're not reading a file because MOCKUP! So we just set some variables here that a proper function should
-	-- read from a file.
-	map.width = 49
-	map.height = 28
-	map.data = { 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 234, 203, 203, 203, 203, 203, 203, 203, 203, 203, 203, 235, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 188, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 188, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 188, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 202, 203, 203, 204, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 186, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 170, 171, 171, 171, 171, 171, 171, 171, 171, 171, 171, 171, 171, 171, 251, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 208, 203, 203, 203, 203, 235, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 145, 149, 150, 151, 146, 146, 146, 146, 146, 149, 150, 151, 146, 146, 146, 146, 146, 147, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 141, nil, 165, 166, 167, nil, nil, nil, nil, nil, 165, 166, 167, nil, nil, nil, nil, nil, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 181, 182, 183, nil, nil, nil, nil, nil, 181, 182, 183, nil, nil, nil, nil, nil, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 141, nil, nil, nil, 197, 198, 199, nil, nil, nil, nil, nil, 197, 198, 199, nil, nil, nil, nil, nil, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 213, 214, 215, nil, nil, nil, nil, nil, 213, 214, 215, nil, nil, nil, nil, nil, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 141, nil, nil, nil, nil, nil, 229, 230, 231, nil, nil, nil, nil, nil, 229, 230, 231, nil, nil, nil, nil, nil, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 141, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 245, 246, 247, nil, nil, nil, nil, nil, 245, 246, 247, nil, nil, nil, nil, nil, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 145, 149, 150, 151, 146, 146, 146, 146, 146, 149, 150, 151, 146, 146, 146, 146, 146, 149, 150, 151, 146, 146, 146, 146, 146, 149, 150, 151, 146, 146, 146, 146, 146, 149, 150, 151, 147, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 164, 165, 166, 167, 168, nil, nil, nil, 164, 165, 166, 167, 168, nil, nil, nil, 164, 165, 166, 167, 168, nil, nil, nil, 164, 165, 166, 167, 168, nil, nil, nil, nil, 165, 166, 167, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 180, 181, 182, 183, 184, nil, nil, nil, 180, 181, 182, 183, 184, nil, nil, nil, 180, 181, 182, 183, 184, nil, nil, nil, 180, 181, 182, 183, 184, nil, nil, nil, nil, 181, 182, 183, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 196, 197, 198, 199, 200, nil, nil, nil, 196, 197, 198, 199, 200, nil, nil, nil, 196, 197, 198, 199, 200, nil, nil, nil, 196, 197, 198, 199, 200, nil, nil, nil, nil, 197, 198, 199, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 212, 213, 214, 215, 216, nil, nil, nil, 212, 213, 214, 215, 216, nil, nil, nil, 212, 213, 214, 215, 216, nil, nil, nil, 212, 213, 214, 215, 216, nil, nil, nil, nil, 213, 214, 215, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 228, 229, 230, 231, 232, nil, nil, nil, 228, 229, 230, 231, 232, nil, nil, nil, 228, 229, 230, 231, 232, nil, nil, nil, 228, 229, 230, 231, 232, nil, nil, nil, nil, 229, 230, 231, nil, 186, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187, 187 }
-	map.tiles = {}
-	map.tileSize = 16
-	
-	-- The following keeps track of what portion of the map to draw.
-	map.drawing = {}
-	map.drawing.batch = nil
-	map.drawing.topLeftX = 1
-	map.drawing.topLeftY = 1
-
-	-- Load the required tiles.
-	if not loadTiles() then return false end
-
-	-- Call updateMap() to initialize the tiles to draw, otherwise we'll draw nothing until the map moves.
-	updateMap()
-
-	return true
+-- Functions
+function Map:new(width, height, data, zIndex, scrollRateX, scrollRateY)
+	-- Constructor
+	local object = { width = width, height = height, data = data, zIndex = zIndex, scrollRate = { x = scrollRateX, y = scrollRateY } }
+	setmetatable(object, { __index = Map })
+	return object
 end
 
-function loadTiles()
+function Map:loadTiles(tilesetImagePath, tileSize)
 	-- Loads the tileset from an image and breaks them up into individual quads.
+
+	-- Create our tile data table.
+	self.tiles = {}
+	self.tiles.size = tileSize
+	self.tiles.batch = nil
+
 	-- Load the image file.
-	local tilesetImage = love.graphics.newImage("Graphics/Tileset.png")
-	if tilesetImage == nil then return false end
+	self.tiles.tilesetImage = love.graphics.newImage(tilesetImagePath)
+	if not 	self.tiles.tilesetImage then error("Could not load tileset: "..tilesetImagePath) end
 
 	-- Removes artifacts if we scale the image.
-	tilesetImage:setFilter("nearest", "nearest")
+	self.tiles.tilesetImage:setFilter("nearest", "nearest")
 
 	-- Calculate the dimensions of the tile set.
-	local tileRows = tilesetImage:getHeight() / map.tileSize
-	local tileColumns = tilesetImage:getWidth() / map.tileSize
+	local tileRows = self.tiles.tilesetImage:getHeight() / tileSize
+	local tileColumns = self.tiles.tilesetImage:getWidth() / tileSize
 	local tileCount = tileRows * tileColumns
+
 
 	-- Create quads for each tile.
 	local currentTile = 1
 	for currentRow = 0, tileRows - 1 do
 		for currentColumn = 0, tileColumns - 1 do
-			map.tiles[currentTile] = love.graphics.newQuad(currentColumn * map.tileSize, currentRow * map.tileSize, map.tileSize, map.tileSize, tilesetImage:getWidth(), tilesetImage:getHeight())
+			self.tiles[currentTile] = love.graphics.newQuad(currentColumn * tileSize, currentRow * tileSize, tileSize, tileSize, self.tiles.tilesetImage:getWidth(), self.tiles.tilesetImage:getHeight())
 			currentTile = currentTile + 1
 		end
 	end
 
-	-- Create a SpriteBatch to store the tiles we're going to draw to screen.
-	map.drawing.batch = love.graphics.newSpriteBatch(tilesetImage, game.viewport.width * game.viewport.height)
-	return true
 end
 
-function updateMap()
+function Map:createTileBatch(widthInTiles, heightInTiles)
+	-- Create a SpriteBatch to store the tiles we're going to draw to screen.
+	if self.tiles.batch then self.tiles.batch = nil end
+	self.tiles.batch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, widthInTiles * heightInTiles)
+end
+
+function Map:updateTileBatch(originX, originY, viewportWidth, viewportHeight)
 	-- Updates the Sprite Batch based on our position in the world.
+	-- TODO: Create the tile batch here, calculating dimension via viewportWidth / tileSize * viewportHeight / tileSize
+
+	-- This clamps our values so we don't scroll beyond the edges of the map. The - 1 at the end is necessary to 
+	-- keep the map from "bouncing" when you reach the end.
+	originX = math.max( math.min(originX, self.tileSize * (self.width  - viewportWidth ) - 1), 1)
+	originY = math.max( math.min(originY, self.tileSize * (self.height - viewportHeight) - 1), 1)
+
+	-- This calculates the tile that's in the top right portion of the viewport. We use it to tell us what tiles to draw.
+	local tileX  = math.max( math.min( math.floor(originX / self.tileSize) + 1, self.width  - viewportWidth ), 1)
+	local tileY  = math.max( math.min( math.floor(originY / self.tileSize) + 1, self.height - viewportHeight), 1)
+
 	-- Possible optimization: check if our position in the world has changed before doing all this.
-	map.drawing.batch:clear()
+	self.tiles.batch:clear()
 
 	for y = 0, game.viewport.height - 1 do
 		for x = 0, game.viewport.width - 1 do
-			local currentTile = (y * map.width) + (map.drawing.topLeftY * map.width) + map.drawing.topLeftX + x
+			local currentTile = (y * self.width) + (tileY * self.width) + (tileX + x)
 
-			if map.data[currentTile] then
-				map.drawing.batch:addq(map.tiles[map.data[currentTile]], x * map.tileSize - (game.viewport.originX % map.tileSize), y * map.tileSize - (game.viewport.originY % map.tileSize))
+			if self.data[currentTile] then
+				map.drawing.batch:addq( self.tiles[ self.data[currentTile] ], (x * self.tileSize) - (originX % self.tileSize), (y * self.tileSize) - (originY % self.tileSize) )
 			end
 		end
 	end
 end
 
-function moveMap(deltaX, deltaY)
-	-- This clamps our values so we don't scroll beyond the edges of the map. The - 1 at the end is necessary to 
-	-- fight this thing that happens where the map "bounces" when you reach the end.
-	game.viewport.originX = math.max(math.min(game.viewport.originX + deltaX, map.tileSize * (map.width - game.viewport.width) - 1), 1)
-	game.viewport.originY = math.max(math.min(game.viewport.originY + deltaY, map.tileSize * (map.height - game.viewport.height) - 1), 1)
-
-	-- This calculates the tile that's in the top right portion of the viewport. We use it to tell us what tiles to draw.
-	map.drawing.topLeftX = math.max(math.min(1 + math.floor(game.viewport.originX / map.tileSize), map.width - game.viewport.width), 1)
-	map.drawing.topLeftY = math.max(math.min(1 + math.floor(game.viewport.originY / map.tileSize), map.height - game.viewport.height), 1)
+function Map:draw()
+	-- Merely draws the map.
+	love.graphics.draw(self.tiles.batch)
 end
-
-function drawMap()
-	-- Draws the map at 2x the tile size, to fit the entire window.
-	love.graphics.push()
-	love.graphics.scale(2)
-	love.graphics.draw(map.drawing.batch)
-	love.graphics.pop()
-end
-

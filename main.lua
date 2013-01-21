@@ -8,13 +8,15 @@
 
 -- Modules
 require("game")
+require("camera")
 require("map")
 
 -- Löve's General Callback Functions
 function love.load()
 	print("Loading...")
-	love.graphics.setBackgroundColor(127, 127, 127)
-	loadMap()
+	game.init()
+	-- game.currentLevel.init()
+	map.loadMap()
 end
 
 function love.focus(f)
@@ -55,6 +57,9 @@ end
 function love.draw()
 	-- Draw the game world.
 	drawMap()
+	-- game.currentCamera:draw()
 
-	love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20)
+	if game.showFPS then
+		love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20)
+	end
 end
