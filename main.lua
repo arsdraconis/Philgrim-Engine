@@ -20,10 +20,10 @@ end
 function love.focus(f)
 	if not f then
 		game.paused = true
-		print(love.graphics.getCaption().." lost focus!", 1, 1)
+		print(love.graphics.getCaption().." lost focus!")
 	else
 		game.paused = false
-		print(love.graphics.getCaption().." gained focus!", 1, 1)
+		print(love.graphics.getCaption().." gained focus!")
 	end
 end
 
