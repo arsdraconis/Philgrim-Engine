@@ -43,7 +43,7 @@ function Map:loadTiles(tilesetImagePath, tileSize)
 
 	-- Load the image file.
 	self.tiles.tilesetImage = love.graphics.newImage(tilesetImagePath)
-	if not 	self.tiles.tilesetImage then error("Could not load tileset: "..tilesetImagePath) end
+	if not self.tiles.tilesetImage then error("Could not load tileset: "..tilesetImagePath) end
 
 	-- Removes artifacts if we scale the image.
 	self.tiles.tilesetImage:setFilter("nearest", "nearest")
@@ -89,8 +89,11 @@ function Map:update(originX, originY, viewportWidth, viewportHeight)
 	-- Possible optimization: check if our position in the world has changed before doing all this.
 	self.tiles.batch:clear()
 
-	for y = 0, viewportHeight - 1 do
-		for x = 0, viewportWidth - 1 do
+	viewportWidth = viewportWidth / self.tiles.size
+	viewportHeight = viewportHeight / self.tiles.size
+
+	for y = 0, viewportHeight do
+		for x = 0, viewportWidth do
 			local currentTile = (y * self.width) + (tileY * self.width) + (tileX + x)
 
 			if self.data[currentTile] then

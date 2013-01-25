@@ -64,6 +64,7 @@ function Camera:draw()
 		love.graphics.scale(self.scale)
 
 		-- Add a for loop.
+		game.map:draw()
 
 		-- Draw the map, from back to front.
 		-- Draw the entities in the game world, back to front.
