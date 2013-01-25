@@ -16,7 +16,7 @@ function love.load()
 	print("Loading...")
 	game.init()
 	-- game.currentLevel.init()
-	map.loadMap()
+	-- map.loadMap()
 end
 
 function love.focus(f)
@@ -39,25 +39,30 @@ function love.update(dt)
 
 	-- Game tick code here.
 	if love.keyboard.isDown("up")  then
-		moveMap(0, -2)
+		game.currentCamera:move(0, -2)
 	end
 	if love.keyboard.isDown("down")  then
-		moveMap(0, 2)
+		game.currentCamera:move(0, 2)
 	end
 	if love.keyboard.isDown("left")  then
-		moveMap(-2, 0)
+		game.currentCamera:move(-2, 0)
 	end
 	if love.keyboard.isDown("right")  then
-		moveMap(2, 0)
+		game.currentCamera:move(2, 0)
 	end
 
-	updateMap()
+	local x, y = game.currentCamera:getOrigin()
+	local width, height = game.currentCamera:getDimensions()
+	local scale = game.currentCamera:getScale()
+	width = width / scale
+	height = height / scale
+
+	game.map:update(x, y, width, height)
 end
 
 function love.draw()
 	-- Draw the game world.
-	drawMap()
-	-- game.currentCamera:draw()
+	game.currentCamera:draw()
 
 	if game.showFPS then
 		love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20)

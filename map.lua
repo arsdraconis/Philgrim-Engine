@@ -65,34 +65,36 @@ function Map:loadTiles(tilesetImagePath, tileSize)
 
 end
 
-function Map:createTileBatch(widthInTiles, heightInTiles)
-	-- Create a SpriteBatch to store the tiles we're going to draw to screen.
-	if self.tiles.batch then self.tiles.batch = nil end
-	self.tiles.batch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, widthInTiles * heightInTiles)
-end
-
-function Map:updateTileBatch(originX, originY, viewportWidth, viewportHeight)
+function Map:update(originX, originY, viewportWidth, viewportHeight)
 	-- Updates the Sprite Batch based on our position in the world.
-	-- TODO: Create the tile batch here, calculating dimension via viewportWidth / tileSize * viewportHeight / tileSize
+	-- TODO: Will this work?
+	-- TODO: Should this be combined with the drawing?
+
+	-- Create a SpriteBatch to store the tiles we're going to draw to screen.
+	if not self.tiles.batch then
+		self.tiles.batch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, (viewportWidth / self.tiles.size + 1) * (viewportHeight / self.tiles.size + 1))
+	else
+		-- If the thing already exists but the viewport dimensions have changed, recreate the batch.
+	end
 
 	-- This clamps our values so we don't scroll beyond the edges of the map. The - 1 at the end is necessary to 
 	-- keep the map from "bouncing" when you reach the end.
-	originX = math.max( math.min(originX, self.tileSize * (self.width  - viewportWidth ) - 1), 1)
-	originY = math.max( math.min(originY, self.tileSize * (self.height - viewportHeight) - 1), 1)
+	originX = math.max( math.min(originX, self.tiles.size * (self.width  - viewportWidth ) - 1), 1)
+	originY = math.max( math.min(originY, self.tiles.size * (self.height - viewportHeight) - 1), 1)
 
 	-- This calculates the tile that's in the top right portion of the viewport. We use it to tell us what tiles to draw.
-	local tileX  = math.max( math.min( math.floor(originX / self.tileSize) + 1, self.width  - viewportWidth ), 1)
-	local tileY  = math.max( math.min( math.floor(originY / self.tileSize) + 1, self.height - viewportHeight), 1)
+	local tileX = math.max( math.min( math.floor(originX / self.tiles.size) + 1, self.width  - viewportWidth ), 1)
+	local tileY = math.max( math.min( math.floor(originY / self.tiles.size) + 1, self.height - viewportHeight), 1)
 
 	-- Possible optimization: check if our position in the world has changed before doing all this.
 	self.tiles.batch:clear()
 
-	for y = 0, game.viewport.height - 1 do
-		for x = 0, game.viewport.width - 1 do
+	for y = 0, viewportHeight - 1 do
+		for x = 0, viewportWidth - 1 do
 			local currentTile = (y * self.width) + (tileY * self.width) + (tileX + x)
 
 			if self.data[currentTile] then
-				map.drawing.batch:addq( self.tiles[ self.data[currentTile] ], (x * self.tileSize) - (originX % self.tileSize), (y * self.tileSize) - (originY % self.tileSize) )
+				self.tiles.batch:addq( self.tiles[ self.data[currentTile] ], (x * self.tiles.size) - (originX % self.tiles.size), (y * self.tiles.size) - (originY % self.tiles.size) )
 			end
 		end
 	end

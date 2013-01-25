@@ -37,6 +37,18 @@ function Camera:centerAt(x, y)
 	self.x, self.y = x + self.width / 2, y + self.height / 2
 end
 
+function Camera:getOrigin()
+	return self.x, self.y
+end
+
+function Camera:getScale()
+	return self.scale
+end
+
+function Camera:getDimensions()
+	return self.width, self.height
+end
+
 function Camera:draw()
 	-- TODO: Finish me!
 	-- TODO: May need to calculate width and height in tiles here, then pass them with origin coordinates to updateMap.
