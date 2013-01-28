@@ -1,5 +1,5 @@
 --[[
-	Mockup
+	Filgrim Engine
 	camera.lua
 
 	A 2D platform mockup for LÖVE.

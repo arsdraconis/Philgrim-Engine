@@ -1,5 +1,5 @@
 --[[
-	Mockup
+	Filgrim Engine
 	conf.lua
 
 	A 2D platform mockup for LÖVE. 
@@ -7,7 +7,7 @@
 ]]
 
 function love.conf(t)
-    t.title = "Mockup"        -- The title of the window the game is in (string)
+    t.title = "Filgrim Engine"        -- The title of the window the game is in (string)
     t.author = "Hoover"        -- The author of the game (string)
     t.url = nil                 -- The website of the game (string)
     t.identity = nil            -- The name of the save directory (string)

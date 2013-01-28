@@ -1,5 +1,5 @@
 --[[
-	Mockup
+	Filgrim Engine
 	level.lua
 
 	A 2D platform mockup for LÖVE. 
