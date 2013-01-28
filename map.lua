@@ -4,22 +4,6 @@
 
 	A 2D platform mockup for LÖVE. 
 	Written by Hoover.
-
-	Basically, we create a 2D array to hold the map data, load the tileset image, then slice the image up
-	into quads that we store in map.tiles. Every frame, we calculate the map tiles that will be on screen
-	and stick them into map.drawing.batch, which then gets drawn in drawMap(). This keeps us from drawing tiles
-	that are offscreen although the entire map stays in memory.
-
-	TODO: Implement multiple map layers. We could create a table to hold each layer.
-	A layer would, in turn, be its own table and have something like the following
-	attributes, in no particular order:
-	1. Z index
-	2. Parallax horizontal and vertical scroll rate (0 means fixed/won't scroll in that axis)
-	3. map data
-	4. Associated tile sets(?)
-	5. Layer name
-	6. width and height
-	7. offset from origin (maybe just calculate this from the dimensions and scroll rate)
 ]]
 
 -- Globals
@@ -43,9 +27,9 @@ function Map:loadTiles(tilesetImagePath, tileSize)
 
 	-- Load the image file.
 	self.tiles.tilesetImage = love.graphics.newImage(tilesetImagePath)
-	if not self.tiles.tilesetImage then error("Could not load tileset: "..tilesetImagePath) end
+	assert(self.tiles.tilesetImage, "Could not load tileset: "..tilesetImagePath)
 
-	-- Removes artifacts if we scale the image.
+	-- This removes artifacts if we scale the image.
 	self.tiles.tilesetImage:setFilter("nearest", "nearest")
 
 	-- Calculate the dimensions of the tile set.
@@ -53,12 +37,12 @@ function Map:loadTiles(tilesetImagePath, tileSize)
 	local tileColumns	= self.tiles.tilesetImage:getWidth()  / tileSize
 	local tileCount		= tileRows * tileColumns
 
-
 	-- Create quads for each tile.
 	local currentTile = 1
+
 	for currentRow = 0, tileRows - 1 do
 		for currentColumn = 0, tileColumns - 1 do
-			self.tiles[currentTile] = love.graphics.newQuad(currentColumn * tileSize, currentRow * tileSize, tileSize, tileSize, self.tiles.tilesetImage:getWidth(), self.tiles.tilesetImage:getHeight())
+			self.tiles[currentTile] = love.graphics.newQuad(currentColumn * tileSize, currentRow * tileSize, tileSize, tileSize, self.tiles.tilesetImage:getWidth(), self.tiles.tilesetImage:getHeight() )
 			currentTile = currentTile + 1
 		end
 	end
@@ -66,17 +50,17 @@ function Map:loadTiles(tilesetImagePath, tileSize)
 end
 
 function Map:update(originX, originY, viewportWidth, viewportHeight)
-	-- Updates the Sprite Batch based on our position in the world.
+	-- Updates the map's SpriteBatch based on our position in the world.
 	-- TODO: Should this be merged into draw()?
 
 	-- We don't care about actual pixel values in this function!
-	-- TODO: Taking out the + 1 adds an extra row of tiles at the bottom of the map.
-	viewportWidth  = viewportWidth  / self.tiles.size + 1
+	viewportWidth  = viewportWidth  / self.tiles.size
 	viewportHeight = viewportHeight / self.tiles.size + 1
+	-- TODO: Taking out the + 1 adds an empty row at the bottom of the map.
 
 	-- Create a SpriteBatch to store the tiles we're going to draw to screen.
 	if not self.tiles.batch then
-		self.tiles.batch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, (viewportWidth + 1) * (viewportHeight + 1) )
+		self.tiles.batch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, viewportWidth * viewportHeight)
 	else
 		-- If the thing already exists but the viewport dimensions have changed, recreate the batch.
 	end

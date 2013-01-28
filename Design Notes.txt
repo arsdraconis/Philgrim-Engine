@@ -1,6 +1,19 @@
 Design Notes
 
-1.	Do we really need a type identification system for objects? Should we just rely on Lua to tell us when
-	something's not the right type?
+Problems
+1.	Do we really need a type identification system for objects? Should we just rely on Lua to
+	choke when something's not the right type?
 2.	To render the map correctly, we need to add 1 to the viewport dimensions in Map:update(). Is this
 	my fuck up?
+
+Map Notes
+The map data is a 1D array. Assuming you want the coordinate (x, y), find the tile using this:
+
+	mapWidth * y + x
+
+Tilesets are loaded separately to allow us to swap out tilesets without changing map data. The
+tileset image gets sliced into quads and stored in a tiles table.
+
+Every frame, we calculate the map tiles that will be on screen and stick them into tiles.batch,
+which then gets drawn in drawMap(). This keeps us from drawing offscreen tiles while keeping
+the whole map in memory.

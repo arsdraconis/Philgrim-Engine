@@ -63,7 +63,5 @@ function love.draw()
 	-- Draw the game world.
 	game.currentCamera:draw()
 
-	if game.showFPS then
-		love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20)
-	end
+	if game.showFPS then love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20) end
 end
