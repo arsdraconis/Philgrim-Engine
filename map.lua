@@ -77,10 +77,15 @@ function Map:update(originX, originY, viewportWidth, viewportHeight)
 		-- If the thing already exists but the viewport dimensions have changed, recreate the batch.
 	end
 
+	viewportWidth = viewportWidth / self.tiles.size
+	viewportHeight = viewportHeight / self.tiles.size
+
 	-- This clamps our values so we don't scroll beyond the edges of the map. The - 1 at the end is necessary to 
 	-- keep the map from "bouncing" when you reach the end.
 	originX = math.max( math.min(originX, self.tiles.size * (self.width  - viewportWidth ) - 1), 1)
 	originY = math.max( math.min(originY, self.tiles.size * (self.height - viewportHeight) - 1), 1)
+
+	-- print("Modified origin point: "..originX..", "..originY)
 
 	-- This calculates the tile that's in the top right portion of the viewport. We use it to tell us what tiles to draw.
 	local tileX = math.max( math.min( math.floor(originX / self.tiles.size) + 1, self.width  - viewportWidth ), 1)
@@ -88,9 +93,6 @@ function Map:update(originX, originY, viewportWidth, viewportHeight)
 
 	-- Possible optimization: check if our position in the world has changed before doing all this.
 	self.tiles.batch:clear()
-
-	viewportWidth = viewportWidth / self.tiles.size
-	viewportHeight = viewportHeight / self.tiles.size
 
 	for y = 0, viewportHeight do
 		for x = 0, viewportWidth do
