@@ -49,9 +49,9 @@ function Map:loadTiles(tilesetImagePath, tileSize)
 	self.tiles.tilesetImage:setFilter("nearest", "nearest")
 
 	-- Calculate the dimensions of the tile set.
-	local tileRows = self.tiles.tilesetImage:getHeight() / tileSize
-	local tileColumns = self.tiles.tilesetImage:getWidth() / tileSize
-	local tileCount = tileRows * tileColumns
+	local tileRows		= self.tiles.tilesetImage:getHeight() / tileSize
+	local tileColumns	= self.tiles.tilesetImage:getWidth()  / tileSize
+	local tileCount		= tileRows * tileColumns
 
 
 	-- Create quads for each tile.
@@ -67,42 +67,42 @@ end
 
 function Map:update(originX, originY, viewportWidth, viewportHeight)
 	-- Updates the Sprite Batch based on our position in the world.
-	-- TODO: Will this work?
-	-- TODO: Should this be combined with the drawing?
+	-- TODO: Should this be merged into draw()?
+
+	-- We don't care about actual pixel values in this function!
+	-- TODO: Taking out the + 1 adds an extra row of tiles at the bottom of the map.
+	viewportWidth  = viewportWidth  / self.tiles.size + 1
+	viewportHeight = viewportHeight / self.tiles.size + 1
 
 	-- Create a SpriteBatch to store the tiles we're going to draw to screen.
 	if not self.tiles.batch then
-		self.tiles.batch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, (viewportWidth / self.tiles.size + 1) * (viewportHeight / self.tiles.size + 1))
+		self.tiles.batch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, (viewportWidth + 1) * (viewportHeight + 1) )
 	else
 		-- If the thing already exists but the viewport dimensions have changed, recreate the batch.
 	end
 
-	viewportWidth = viewportWidth / self.tiles.size
-	viewportHeight = viewportHeight / self.tiles.size
-
-	-- This clamps our values so we don't scroll beyond the edges of the map. The - 1 at the end is necessary to 
-	-- keep the map from "bouncing" when you reach the end.
+	-- This clamps our values so we don't scroll beyond the edges of the map.
+	-- The - 1 at the end is necessary to keep the map from "bouncing" when you reach the end.
 	originX = math.max( math.min(originX, self.tiles.size * (self.width  - viewportWidth ) - 1), 1)
 	originY = math.max( math.min(originY, self.tiles.size * (self.height - viewportHeight) - 1), 1)
-
-	-- print("Modified origin point: "..originX..", "..originY)
 
 	-- This calculates the tile that's in the top right portion of the viewport. We use it to tell us what tiles to draw.
 	local tileX = math.max( math.min( math.floor(originX / self.tiles.size) + 1, self.width  - viewportWidth ), 1)
 	local tileY = math.max( math.min( math.floor(originY / self.tiles.size) + 1, self.height - viewportHeight), 1)
 
-	-- Possible optimization: check if our position in the world has changed before doing all this.
+	-- TODO: Possible optimization: check if our position in the world has changed before doing all this.
 	self.tiles.batch:clear()
 
 	for y = 0, viewportHeight do
 		for x = 0, viewportWidth do
-			local currentTile = (y * self.width) + (tileY * self.width) + (tileX + x)
+			local currentTile = self.width * (tileY + y) + (tileX + x)
 
 			if self.data[currentTile] then
 				self.tiles.batch:addq( self.tiles[ self.data[currentTile] ], (x * self.tiles.size) - (originX % self.tiles.size), (y * self.tiles.size) - (originY % self.tiles.size) )
 			end
 		end
 	end
+
 end
 
 function Map:draw()

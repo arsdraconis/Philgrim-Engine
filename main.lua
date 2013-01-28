@@ -15,8 +15,6 @@ require("map")
 function love.load()
 	print("Loading...")
 	game.init()
-	-- game.currentLevel.init()
-	-- map.loadMap()
 end
 
 function love.focus(f)
@@ -56,7 +54,8 @@ function love.update(dt)
 	local scale = game.currentCamera:getScale()
 	width = width / scale
 	height = height / scale
-
+	-- TODO: When you get to the edge of the screen, it takes a moment before it starts scrolling in the opposite direction.
+	-- This means camera values need to be clamped.
 	game.map:update(x, y, width, height)
 end
 

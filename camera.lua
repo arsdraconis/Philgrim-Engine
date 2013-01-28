@@ -9,10 +9,10 @@
 --[[
 	TODO:
 	1. Add functions for converting coordinates from world to screen and vice versa.
-	2. Add more settings, like background color, tint/filters, etc.
-	3. Add stuff for the width/height in tiles, etc.
+	2. Add more settings, like setting background color, tint/filters, etc.
+	3. Add stuff to get the width/height in tiles, etc.
 	4. We could allow for multiple cameras to draw to the screen (e.g., for picture-in-picture)
-	   if we store the origin at which to draw it at.
+	   if we store the origin at which to draw on the window at.
 ]]
 
 -- Globals
@@ -34,7 +34,7 @@ end
 
 function Camera:centerAt(x, y)
 	-- Centers the specified coordinate in the camera's view.
-	self.x, self.y = x + self.width / 2, y + self.height / 2
+	self.x, self.y = x - self.width / 2, y - self.height / 2
 end
 
 function Camera:getOrigin()
@@ -50,12 +50,10 @@ function Camera:getDimensions()
 end
 
 function Camera:draw()
-	-- TODO: Finish me!
-	-- TODO: May need to calculate width and height in tiles here, then pass them with origin coordinates to updateMap.
 	-- Draws the current scene.
+	-- TODO: Currently broken. Finish me!
 
 	-- If our position hasn't changed, don't bother recalculating the map position.
-	-- TODO: Currently broken.
 	-- if self.x == self.lastPosition.x and self.y == self.lastPosition.y then return end
 
 	--[[ Check if the current map has map layers. If so, draw them.
@@ -63,10 +61,8 @@ function Camera:draw()
 		love.graphics.push()
 		love.graphics.scale(self.scale)
 
-		-- Add a for loop.
+		-- Draw the map layers, from back to front.
 		game.map:draw()
-
-		-- Draw the map, from back to front.
 		-- Draw the entities in the game world, back to front.
 
 		love.graphics.pop()

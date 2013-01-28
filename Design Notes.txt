@@ -1,0 +1,6 @@
+Design Notes
+
+1.	Do we really need a type identification system for objects? Should we just rely on Lua to tell us when
+	something's not the right type?
+2.	To render the map correctly, we need to add 1 to the viewport dimensions in Map:update(). Is this
+	my fuck up?
