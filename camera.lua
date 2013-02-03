@@ -2,10 +2,9 @@
 	Filgrim Engine
 	camera.lua
 
-	A 2D platform mockup for LÖVE.
-	Written by Hoover
+	A 2D platformer engine for LÖVE
+	By Hoover and Phil
 ]]
-
 --[[
 	TODO:
 	1. Add functions for converting coordinates from world to screen and vice versa.
@@ -16,29 +15,32 @@
 ]]
 
 -- Globals
-Camera = {}		-- A table to hold our class methods.
+Camera = {}		-- Camera object prototype
 
 -- Functions
 function Camera:new(x, y, width, height, scale)
 	-- Constructor
-	local object = { x = x, y = y, width = width, height = height, scale = scale or 1, lastPosition = { x = x, y = y } }
+	local object = { x = x, y = y, width = width, height = height, scale = scale or 1 }
 	setmetatable(object, { __index = Camera })
 	return object
 end
 
+function Camera:setPosition(x, y)
+	self.x, self.y = x, y
+end
+
+function Camera:getPosition()
+	return self.x, self.y
+end
+
 function Camera:move(deltaX, deltaY)
 	-- Moves the camera by adding/subtracting the delta values to the origin.
-	self.x = self.x + deltaX
-	self.y = self.y + deltaY
+	self.x, self.y = self.x + deltaX, self.y + deltaY
 end
 
 function Camera:centerAt(x, y)
 	-- Centers the specified coordinate in the camera's view.
 	self.x, self.y = x - self.width / 2, y - self.height / 2
-end
-
-function Camera:getOrigin()
-	return self.x, self.y
 end
 
 function Camera:getScale()
@@ -63,14 +65,15 @@ function Camera:draw()
 
 		-- Draw the map layers, from back to front.
 		game.map:draw()
+		Entity:drawAll(self.x, self.y)
 		-- Draw the entities in the game world, back to front.
 
 		love.graphics.pop()
 	-- end
 end
 
-function Camera:isCamera()
-	return true
+function Camera:type()
+	return "camera"
 end
 
 function Camera:convertScreenToWorld(x, y)

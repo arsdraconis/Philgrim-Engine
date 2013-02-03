@@ -17,3 +17,18 @@ tileset image gets sliced into quads and stored in a tiles table.
 Every frame, we calculate the map tiles that will be on screen and stick them into tiles.batch,
 which then gets drawn in drawMap(). This keeps us from drawing offscreen tiles while keeping
 the whole map in memory.
+
+Entity Notes
+The base entity class will serve as a root object for all entities. It will define prototype methods
+and keep a list of all created entities.
+
+To subclass Entity, create a constructor like this
+
+function MyEntity:new(x, y, width, height, args...)
+	local object = Entity:new(x, y, width, height)
+	object.args = args
+	return object
+end
+
+Since the Entity constructor sets the metatable to Entity, any functions not implimented in
+MyEntity would be looked up in Entity.

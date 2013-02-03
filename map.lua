@@ -2,18 +2,18 @@
 	Filgrim Engine
 	map.lua
 
-	A 2D platform mockup for LÖVE. 
-	Written by Hoover.
+	A 2D platformer engine for LÖVE
+	By Hoover and Phil
 ]]
 
 -- Globals
-Map = {}		-- A table to hold our class methods.
+Map = {}		-- Map object prototype
 
 -- Functions
 function Map:new(width, height, data, zIndex, scrollRateX, scrollRateY)
 	-- Constructor
 	local object = { width = width, height = height, data = data, zIndex = zIndex, scrollRate = { x = scrollRateX, y = scrollRateY } }
-	setmetatable(object, { __index = Map })
+	setmetatable(object, { __index = Map } )
 	return object
 end
 
@@ -92,4 +92,16 @@ end
 function Map:draw()
 	-- Merely draws the map.
 	love.graphics.draw(self.tiles.batch)
+end
+
+function Map:getDimensions()
+	return self.width, self.height
+end
+
+function Map:getTileSize()
+	return self.tiles.size
+end
+
+function Map:getDimensionsInPixels()
+	return self.width * self.tiles.size, self.height * self.tiles.size
 end

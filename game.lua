@@ -2,8 +2,8 @@
 	Filgrim Engine
 	game.lua
 
-	A 2D platform mockup for LÖVE. 
-	Written by Hoover.
+	A 2D platformer engine for LÖVE
+	By Hoover and Phil
 ]]
 
 -- Globals
@@ -14,11 +14,11 @@ game.cameras = {}
 -- Functions
 function game.cameras.push(camera)
 	-- Pushes the camera onto the camera stack and makes it the current camera.
-	if camera:isCamera() then
+	if camera:type() == "camera" then
 		table.insert(game.cameras, camera)
 		game.currentCamera = game.cameras[ #game.cameras ]
 	else
-		error("game.pushCamera was passed something that was not a camera!")
+		error("game.pushCamera was passed something that was "..camera:type().."!")
 	end
 end
 
@@ -47,4 +47,8 @@ function game.init()
 	local windowWidth, windowHeight = love.graphics.getMode()
 	local defaultCamera = Camera:new(1, 1, windowWidth, windowHeight, 2)
 	game.cameras.push(defaultCamera)
+end
+
+function game.debugTest()
+	debug.test = Entity:new(100, 100, 48, 48)
 end
