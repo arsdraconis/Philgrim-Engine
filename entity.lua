@@ -13,7 +13,7 @@ Entity.allEntities = {}		-- Class variable to hold all entities
 -- Functions
 function Entity:new(x, y, width, height)
 	-- Constructor
-	local object = { x = x, y = y, width = width, height = height, active = true }
+	local object = { x = x, y = y, width = width, height = height, lastJumpVelocity = 0, lastJumpFrame = 0, active = true }
 	setmetatable(object, { __index = Entity })
 	table.insert(Entity.allEntities, object)
 	return object
@@ -134,7 +134,7 @@ function Entity:move(deltaX, deltaY)
 
 		repeat
 			for _, y in pairs(tileList.horizontal) do
-				if game.map:getTile(x, y) then
+				if game.map:getTile(x, y) or x < 1 then
 					collisionDetected = true
 					break
 				end
@@ -158,7 +158,7 @@ function Entity:move(deltaX, deltaY)
 
 		repeat
 			for _, x in pairs(tileList.vertical) do
-				if game.map:getTile(x, y) then
+				if game.map:getTile(x, y) or y < 1 then
 					collisionDetected = true
 					break
 				end
@@ -187,6 +187,12 @@ function Entity:move(deltaX, deltaY)
 		self.y = self.y + math.min(deltaY, distanceY)
 	end
 
+end
+
+function Entity:jump(deltaTime)
+	-- Lua has no static variables, so we keep track of our previous jump velocity via the Player object.
+	self.lastJumpVelocity = 0
+	return -4
 end
 
 function Entity:setPosition(x, y)

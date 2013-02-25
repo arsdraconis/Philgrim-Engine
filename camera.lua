@@ -26,7 +26,12 @@ function Camera:new(x, y, width, height, scale)
 end
 
 function Camera:setPosition(x, y)
-	self.x, self.y = x, y
+	if x ~= nil then
+		self.x = x
+	end
+	if y ~= nil then
+		self.y = y
+	end
 end
 
 function Camera:getPosition()
@@ -36,6 +41,18 @@ end
 function Camera:move(deltaX, deltaY)
 	-- Moves the camera by adding/subtracting the delta values to the origin.
 	self.x, self.y = self.x + deltaX, self.y + deltaY
+	local mapWidth, mapHeight = game.map:getDimensionsInPixels()
+
+	-- Make sure the camera doesn't try to get out of the map.
+	if self.x > (mapWidth * self.scale) - self.width then
+		self.x = (mapWidth * self.scale) - self.width
+	elseif self.x < 1 then
+		self.x = 1
+	elseif self.y > (mapHeight * self.scale) - self.height then
+		self.y = (mapHeight * self.scale) - self.height
+	elseif self.y < 1 then
+		self.y = 1
+	end
 end
 
 function Camera:centerAt(x, y)

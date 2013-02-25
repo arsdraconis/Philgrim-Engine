@@ -22,29 +22,47 @@ function Player:type()
 	return "player"
 end
 
-function Player:update()
-	--print("Current player position: "..self.x..", "..self.y)	
+function Player:update(deltaTime)
+	-- Gravity
+	local jumpVelocity = 4
+	local newJumpVelocity = 0
+
 	-- Move the player.
-	if love.keyboard.isDown("left")  then
+	if love.keyboard.isDown(" ") then
+		-- We use a cubic-ish function to calculate our jump velocities.
+		newJumpVelocity = self:jump(deltaTime)
+	end
+	if love.keyboard.isDown("left") then
 		self:move(-2, 0)
-	elseif love.keyboard.isDown("right")  then
+	elseif love.keyboard.isDown("right") then
 		self:move(2, 0)
 	end
 
-	-- Gravity
-	self:move(0, 4)
-
-	-- Move the camera.
-	if love.keyboard.isDown("up")  then
-		game.currentCamera:move(0, -2)
-	elseif love.keyboard.isDown("down")  then
-		game.currentCamera:move(0, 2)
-	elseif love.keyboard.isDown("left")  then
-		game.currentCamera:move(-2, 0)
-	elseif love.keyboard.isDown("right")  then
-		game.currentCamera:move(2, 0)
+	if newJumpVelocity ~= 0 then
+		jumpVelocity = newJumpVelocity
 	end
 
+	-- Move based on our jump arc or gravity.
+	self:move(0, jumpVelocity)
+
+	-- Move the camera.
+	local cameraX, cameraY = game.currentCamera:getPosition()
+	local cameraScale = game.currentCamera:getScale()
+	local cameraWidth, cameraHeight = game.currentCamera:getDimensions()
+	local cameraMargin = 140
+
+	if self.x * cameraScale <= cameraX + cameraMargin * cameraScale then
+		game.currentCamera:move(-4, 0)
+	elseif (self.x + self.width) * cameraScale >= (cameraX + cameraWidth) - cameraMargin then
+		game.currentCamera:move(4, 0)
+	end
+	if self.y * cameraScale <= cameraY + cameraMargin * cameraScale then
+		game.currentCamera:move(0, -4)
+	elseif (self.y + self.height) * cameraScale >= (cameraY + cameraHeight) - cameraMargin then
+		game.currentCamera:move(0, 4)
+	end
+
+	-- To keep that collision bug from crashing our shit.
 	if self.x < -5 then self.x = 0 end
 	if self.y < -5 then self.y = 0 end
 end
