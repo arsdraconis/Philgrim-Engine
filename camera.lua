@@ -65,8 +65,9 @@ function Camera:draw()
 
 		-- Draw the map layers, from back to front.
 		game.map:draw()
-		Entity:drawAll(self.x, self.y)
+
 		-- Draw the entities in the game world, back to front.
+		Entity:drawAll(self.x, self.y)
 
 		love.graphics.pop()
 	-- end

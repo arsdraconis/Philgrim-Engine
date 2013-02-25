@@ -105,3 +105,8 @@ end
 function Map:getDimensionsInPixels()
 	return self.width * self.tiles.size, self.height * self.tiles.size
 end
+
+function Map:getTile(x, y)
+	--print("Map:getTile called with "..x..", "..y)
+	return self.data[self.width * y + x]
+end

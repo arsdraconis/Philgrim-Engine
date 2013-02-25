@@ -15,11 +15,16 @@ require("player")
 
 debug = {}		-- Here for experimentation.
 
+function debug.debugTest()
+	debug.test = Player:new(100, 100, 48, 48)
+end
+
+
 -- Löve's General Callback Functions
 function love.load()
 	print("Loading...")
 	game.init()
-	game.debugTest()
+	debug.debugTest()
 end
 
 function love.focus(f)
@@ -48,19 +53,9 @@ function love.update(dt)
 	That's it!
 	]]
 
-	if love.keyboard.isDown("up")  then
-		game.currentCamera:move(0, -2)
-	end
-	if love.keyboard.isDown("down")  then
-		game.currentCamera:move(0, 2)
-	end
-	if love.keyboard.isDown("left")  then
-		game.currentCamera:move(-2, 0)
-	end
-	if love.keyboard.isDown("right")  then
-		game.currentCamera:move(2, 0)
-	end
+	Entity:updateAll(dt)
 
+	-- This should all be in the camera code.
 	local scale = game.currentCamera:getScale()
 	local x, y = game.currentCamera:getPosition()
 	local width, height = game.currentCamera:getDimensions()
@@ -70,7 +65,7 @@ function love.update(dt)
 	-- If the camera is beyond the edge of the map, snap it back.
 	local mapWidth, mapHeight = game.map:getDimensionsInPixels()
 	mapWidth  = mapWidth  - width
-	mapHeight = mapHeight - height
+	mapHeight = mapHeight - height - 16		-- Bug here.
 	if x > mapWidth  then x = mapWidth  end
 	if y > mapHeight then y = mapHeight end
 	if x < 1 then x = 1 end
@@ -78,11 +73,6 @@ function love.update(dt)
 
 	game.currentCamera:setPosition(x, y)
 	x, y = game.currentCamera:getPosition()
-
-	-- Gravity for test entity.
-	debug.test:move(0, 3)
-	local currentX, currentY = debug.test:getPosition()
-	if (currentY + 96) > mapHeight + height then debug.test:setPosition(currentX, mapHeight + height - 96) end
 
 	-- Update the map.
 	game.map:update(x, y, width, height)

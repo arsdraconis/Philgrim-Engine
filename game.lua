@@ -48,7 +48,3 @@ function game.init()
 	local defaultCamera = Camera:new(1, 1, windowWidth, windowHeight, 2)
 	game.cameras.push(defaultCamera)
 end
-
-function game.debugTest()
-	debug.test = Entity:new(100, 100, 48, 48)
-end
