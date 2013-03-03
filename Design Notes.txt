@@ -5,6 +5,9 @@ Problems
 	choke when something's not the right type?
 2.	To render the map correctly, we need to add 1 to the viewport dimensions in Map:update(). Is this
 	my fuck up?
+3.	There perhaps should be a Character subclass, since not all entities will make use of the movement
+	functions like Player would. We could use this class for NPCs and subclass it for Player and Enemy
+	classes.
 
 Map Notes
 The map data is a 1D array. Assuming you want the coordinate (x, y), find the tile using this:
@@ -19,8 +22,8 @@ which then gets drawn in drawMap(). This keeps us from drawing offscreen tiles w
 the whole map in memory.
 
 Entity Notes
-The base entity class will serve as a root object for all entities. It will define prototype methods
-and keep a list of all created entities.
+The base entity class will serve as a root object for all entities. It will define prototypes
+and primitive methods and keep a list of all created entities.
 
 To subclass Entity, create a constructor like this
 

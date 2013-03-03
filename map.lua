@@ -55,8 +55,7 @@ function Map:update(originX, originY, viewportWidth, viewportHeight)
 
 	-- We don't care about actual pixel values in this function!
 	viewportWidth  = viewportWidth  / self.tiles.size
-	viewportHeight = viewportHeight / self.tiles.size
-	-- TODO: Taking out the + 1 adds an empty row at the bottom of the map.
+	viewportHeight = viewportHeight / self.tiles.size	-- I think the thing with the + 1 is with the camera code.
 
 	-- Create a SpriteBatch to store the tiles we're going to draw to screen.
 	if not self.tiles.batch then
