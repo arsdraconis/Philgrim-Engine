@@ -40,24 +40,12 @@ end
 
 function Camera:move(deltaX, deltaY)
 	-- Moves the camera by adding/subtracting the delta values to the origin.
-	self.x, self.y = self.x + deltaX, self.y + deltaY
-	local mapWidth, mapHeight = game.map:getDimensionsInPixels()
-
-	-- Make sure the camera doesn't try to get out of the map.
-	if self.x > (mapWidth * self.scale) - self.width then
-		self.x = (mapWidth * self.scale) - self.width
-	elseif self.x < 1 then
-		self.x = 1
-	elseif self.y > (mapHeight * self.scale) - self.height then
-		self.y = (mapHeight * self.scale) - self.height
-	elseif self.y < 1 then
-		self.y = 1
-	end
+	self:moveWithinMapBounds(self.x + deltaX, self.y + deltaY)
 end
 
 function Camera:centerAt(x, y)
 	-- Centers the specified coordinate in the camera's view.
-	self.x, self.y = x - self.width / 2, y - self.height / 2
+	self:moveWithinMapBounds(x - self.width / 2, y - self.height / 2)
 end
 
 function Camera:getScale()
@@ -100,5 +88,27 @@ end
 
 function Camera:convertWorldToScreen(x, y)
 	-- TODO: Write me!
+end
+
+function Camera:moveWithinMapBounds(newX, newY)
+	-- Make sure the new camera position is within the map.
+	local mapWidth, mapHeight = game.map:getDimensionsInPixels()
+
+	if newX > mapWidth - (self.width / self.scale) then
+		self.x = mapWidth - (self.width / self.scale)
+	elseif newX < 1 then
+		self.x = 1
+	else
+		self.x = newX
+	end
+
+	-- FIXME: The -16 pixels are necessary. Remove them to find out why.
+	if newY > mapHeight - (self.height / self.scale) - 16 then
+		self.y = mapHeight - (self.height / self.scale) - 16
+	elseif newY < 1 then
+		self.y = 1
+	else
+		self.y = newY
+	end
 end
 

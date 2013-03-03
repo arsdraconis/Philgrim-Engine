@@ -85,92 +85,73 @@ function Entity:move(deltaX, deltaY)
 	tileList.horizontal = {}
 	tileList.vertical = {}
 
-	local currentCheck = nil
-	local tileInCollection = false
+	local findTiles = function (dimension, position, tileList, tileSize)
+		local currentCheck = nil
+		local tileInCollection = false
 
-	-- Find all horizontal rows we intersect with.
-	for i = 0, self.height do
-		currentCheck = math.floor((self.y + i) / tileSize)
+		-- Find all horizontal rows we intersect with.
+		for i = 0, dimension do
+			currentCheck = math.floor((position + i) / tileSize)
 
-		-- Check if we already added this tile to our collection.
-		tileInCollection = false
+			-- Check if we already added this tile to our collection.
+			tileInCollection = false
 
-		for _, value in pairs(tileList.horizontal) do
-			if value == currentCheck then tileInCollection = true end
-		end
+			for _, value in pairs(tileList) do
+				if value == currentCheck then tileInCollection = true end
+			end
 
-		-- If the current tile is in our tileList, skip it. Otherwise add it.
-		if not tileInCollection then
-			table.insert(tileList.horizontal, currentCheck)
-		end
-	end
-
-	-- Find all vertical rows we intersect with.
-	for i = 0, self.width do
-		currentCheck = math.floor((self.x + i) / tileSize)
-
-		-- Check if we already added this tile to our collection.
-		tileInCollection = false
-
-		for _, value in pairs(tileList.vertical) do
-			if value == currentCheck then tileInCollection = true end
-		end
-
-		-- If the current tile is in our tileList, skip it. Otherwise add it.
-		if not tileInCollection then
-			table.insert(tileList.vertical, currentCheck)
+			-- If the current tile is in our tileList, skip it. Otherwise add it.
+			if not tileInCollection then
+				table.insert(tileList, currentCheck)
+			end
 		end
 	end
+
+	findTiles(self.height, self.y, tileList.horizontal, tileSize)
+	findTiles(self.width, self.x, tileList.vertical, tileSize)
 
 	-- 4. Scan along those lines of tiles and towards the direction of movement until you find the closest static
 	--	obstacle. Then loop through every moving obstacle, and determine which is the closest obstacle that is
 	--	actually on your path.
-	local distanceX, distanceY = 0, 0
-	local collisionDetected = false
 
-	-- Calculate horizontal collisions here.
-	if nextColumnOffset ~= 0 then
-		local x = math.floor(horizontalEdge / tileSize)
+	-- This is the code to calculate our collisions.
+	local calculateCollision = function (columnOffset, axisToCheck, tileList, edge, tileSize)
+		local collisionDetected = false
+		local distance = nil
+		local currentOffset = math.floor(edge / tileSize)
 
 		repeat
-			for _, y in pairs(tileList.horizontal) do
-				if game.map:getTile(x, y) or x < 1 then
-					collisionDetected = true
-					break
+			for _, i in pairs(tileList) do
+				if axisToCheck == "x" then
+					if game.map:getTile(currentOffset, i) or currentOffset < 1 then
+						collisionDetected = true
+						break
+					end
+				elseif axisToCheck == "y" then
+					if game.map:getTile(i, currentOffset) or currentOffset < 1 then
+						collisionDetected = true
+						break
+					end
 				end
 			end
 
-			if nextColumnOffset < 0 then
-				distanceX = (x * tileSize) - horizontalEdge
-			elseif nextColumnOffset > 0 then
-				distanceX = (x * tileSize) - horizontalEdge - tileSize
+			if columnOffset < 0 then
+				distance = (currentOffset * tileSize) - edge
+			elseif columnOffset > 0 then
+				distance = (currentOffset * tileSize) - edge - tileSize
 			end
-			x = x + nextColumnOffset
+			currentOffset = currentOffset + columnOffset
 		until collisionDetected
+
+		return distance
 	end
 
-	-- FIXME: There's a bug here that causes Lua to crash.
-	collisionDetected = false
-
-	-- Calculate vertical collisions here.
+	local distanceX, distanceY = nil, nil
+	if nextColumnOffset ~= 0 then
+		distanceX = calculateCollision(nextColumnOffset, "x", tileList.horizontal, horizontalEdge, tileSize)
+	end
 	if nextRowOffset ~= 0 then
-		local y = math.floor(verticalEdge / tileSize)
-
-		repeat
-			for _, x in pairs(tileList.vertical) do
-				if game.map:getTile(x, y) or y < 1 then
-					collisionDetected = true
-					break
-				end
-			end
-
-			if nextRowOffset < 0 then
-				distanceY = (y * tileSize) - verticalEdge
-			elseif nextRowOffset > 0 then
-				distanceY = (y * tileSize) - verticalEdge - tileSize
-			end
-			y = y + nextRowOffset
-		until collisionDetected
+		distanceY = calculateCollision(nextRowOffset, "y", tileList.vertical, verticalEdge, tileSize)
 	end
 
 	-- 5. The total movement of the player along that direction is then the minimum between the distance to closest

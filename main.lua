@@ -55,26 +55,14 @@ function love.update(dt)
 
 	Entity:updateAll(dt)
 
-	-- This should all be in the camera code.
+
+	-- Update the map.
 	local scale = game.currentCamera:getScale()
 	local x, y = game.currentCamera:getPosition()
 	local width, height = game.currentCamera:getDimensions()
 	width = width / scale
 	height = height / scale
 
-	-- If the camera is beyond the edge of the map, snap it back.
-	local mapWidth, mapHeight = game.map:getDimensionsInPixels()
-	mapWidth  = mapWidth  - width
-	mapHeight = mapHeight - height - 16		-- Bug here.
-	if x > mapWidth  then x = mapWidth  end
-	if y > mapHeight then y = mapHeight end
-	if x < 1 then x = 1 end
-	if y < 1 then y = 1 end
-
-	game.currentCamera:setPosition(x, y)
-	x, y = game.currentCamera:getPosition()
-
-	-- Update the map.
 	game.map:update(x, y, width, height)
 end
 

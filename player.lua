@@ -52,9 +52,9 @@ function Player:update(deltaTime)
 	local cameraMargin = 140
 
 	if self.x * cameraScale <= cameraX + cameraMargin * cameraScale then
-		game.currentCamera:move(-4, 0)
+		game.currentCamera:move(-2, 0)
 	elseif (self.x + self.width) * cameraScale >= (cameraX + cameraWidth) - cameraMargin then
-		game.currentCamera:move(4, 0)
+		game.currentCamera:move(2, 0)
 	end
 	if self.y * cameraScale <= cameraY + cameraMargin * cameraScale then
 		game.currentCamera:move(0, -4)
