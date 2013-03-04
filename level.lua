@@ -7,9 +7,9 @@
 ]]
 
 -- Globals
-Level = {}		-- Level object prototype
+Level = {}
 
--- Functions
+-- OO Methods =================================================================
 function Level:new()
 	-- Constructor
 	local object = {  }

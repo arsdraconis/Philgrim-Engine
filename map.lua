@@ -7,9 +7,9 @@
 ]]
 
 -- Globals
-Map = {}		-- Map object prototype
+Map = {}
 
--- Functions
+-- OO Methods =================================================================
 function Map:new(width, height, data, zIndex, scrollRateX, scrollRateY)
 	-- Constructor
 	local object = { width = width, height = height, data = data, zIndex = zIndex, scrollRate = { x = scrollRateX, y = scrollRateY } }
@@ -17,6 +17,25 @@ function Map:new(width, height, data, zIndex, scrollRateX, scrollRateY)
 	return object
 end
 
+-- Accessors ==================================================================
+function Map:getDimensions()
+	return self.width, self.height
+end
+
+function Map:getTileSize()
+	return self.tiles.size
+end
+
+function Map:getDimensionsInPixels()
+	return self.width * self.tiles.size, self.height * self.tiles.size
+end
+
+function Map:getTile(x, y)
+	-- Returns the tile at the specified map coordinate.
+	return self.data[self.width * y + x]
+end
+
+-- Map Methods ================================================================
 function Map:loadTiles(tilesetImagePath, tileSize)
 	-- Loads the tileset from an image and breaks them up into individual quads.
 
@@ -61,7 +80,7 @@ function Map:update(originX, originY, viewportWidth, viewportHeight)
 	if not self.tiles.batch then
 		self.tiles.batch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, viewportWidth * viewportHeight)
 	else
-		-- If the thing already exists but the viewport dimensions have changed, recreate the batch.
+		-- TODO: If the thing already exists but the viewport dimensions have changed, recreate the batch.
 	end
 
 	-- This clamps our values so we don't scroll beyond the edges of the map.
@@ -73,9 +92,12 @@ function Map:update(originX, originY, viewportWidth, viewportHeight)
 	local tileX = math.max( math.min( math.floor(originX / self.tiles.size) + 1, self.width  - viewportWidth ), 1)
 	local tileY = math.max( math.min( math.floor(originY / self.tiles.size) + 1, self.height - viewportHeight), 1)
 
-	-- TODO: Possible optimization: check if our position in the world has changed before doing all this.
+	-- TODO: Possible optimization: check if our map position has changed before doing all this.
+
+	-- Clear the tile batch.
 	self.tiles.batch:clear()
 
+	-- Populate the tilebatch using the tiles currently on screen.
 	for y = 0, viewportHeight do
 		for x = 0, viewportWidth do
 			local currentTile = self.width * (tileY + y) + (tileX + x)
@@ -91,21 +113,4 @@ end
 function Map:draw()
 	-- Merely draws the map.
 	love.graphics.draw(self.tiles.batch)
-end
-
-function Map:getDimensions()
-	return self.width, self.height
-end
-
-function Map:getTileSize()
-	return self.tiles.size
-end
-
-function Map:getDimensionsInPixels()
-	return self.width * self.tiles.size, self.height * self.tiles.size
-end
-
-function Map:getTile(x, y)
-	--print("Map:getTile called with "..x..", "..y)
-	return self.data[self.width * y + x]
 end

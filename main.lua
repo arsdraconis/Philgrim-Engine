@@ -13,18 +13,18 @@ require("map")
 require("entity")
 require("player")
 
-debug = {}		-- Here for experimentation.
+-- Here for experimentation.
+debug = {}
 
-function debug.debugTest()
-	debug.test = Player:new(100, 100, 48, 48)
+function debug.createTestEntity()
+	debug.testEntity = Player:new(100, 100, 48, 48)
 end
 
-
--- Löve's General Callback Functions
+-- Löve's General Callback Functions ==========================================
 function love.load()
 	print("Loading...")
 	game.init()
-	debug.debugTest()
+	debug.createTestEntity()
 end
 
 function love.focus(f)
@@ -41,22 +41,18 @@ function love.quit()
 	print("Quitting...")
 end
 
--- Love's Game Loop Callbacks
+-- Love's Game Loop Callbacks =================================================
 function love.update(dt)
+	-- Don't do anything if we're paused.
 	if game.paused then return end
 
-	--[[
-	Game loop:
-	1. Read input
-	2. Update map
-	3. Update entities
-	That's it!
-	]]
-
+	-- Update entities.
+	-- Any entity that responds to user input should implement its behavior in its own update() method.
 	Entity:updateAll(dt)
 
-
 	-- Update the map.
+	-- FIXME: Having to get these values to pass them to the map seems like bad design to me.
+	-- FIXME: This should be in a level update function anyway, it's just here for now while we dick around.
 	local scale = game.currentCamera:getScale()
 	local x, y = game.currentCamera:getPosition()
 	local width, height = game.currentCamera:getDimensions()
@@ -67,14 +63,12 @@ function love.update(dt)
 end
 
 function love.draw()
-	--[[
-	Draw loop:
-	1. Draw camera.
-	2. Draw UI.
-	3. Draw debug info (FPS counter, etc.)
-	]]
-
+	-- Tell the camera to draw everything.
 	game.currentCamera:draw()
 
+	-- Draw any UI here.
+	-- TODO: We don't have a UI. Yet.
+
+	-- Draw any debug crap here.
 	if game.showFPS then love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20) end
 end

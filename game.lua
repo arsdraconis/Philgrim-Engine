@@ -10,8 +10,7 @@
 game = {}
 game.cameras = {}
 
-
--- Functions
+-- Camera Functions ===========================================================
 function game.cameras.push(camera)
 	-- Pushes the camera onto the camera stack and makes it the current camera.
 	if camera:type() == "camera" then
@@ -28,6 +27,7 @@ function game.cameras.pop()
 	game.currentCamera = game.cameras[ #game.cameras ]
 end
 
+-- General Game Functions =====================================================
 function game.init()
 	-- Set general LÖVE stuff.
 	love.graphics.setBackgroundColor(127, 127, 127)	-- Should this be in Camera?

@@ -10,7 +10,7 @@
 Player = {}												-- Player object prototype
 Player.mt = setmetatable(Player, { __index = Entity })	-- Derive from Entity.
 
--- Functions
+-- OO Methods =================================================================
 function Player:new(x, y, width, height)
 	local object = Entity:new(x, y, width, height)
 	setmetatable(object, { __index = Player })
@@ -22,6 +22,7 @@ function Player:type()
 	return "player"
 end
 
+-- Player Methods =============================================================
 function Player:update(deltaTime)
 	-- Gravity
 	local jumpVelocity = 4
@@ -46,23 +47,9 @@ function Player:update(deltaTime)
 	self:move(0, jumpVelocity)
 
 	-- Move the camera.
-	local cameraX, cameraY = game.currentCamera:getPosition()
-	local cameraScale = game.currentCamera:getScale()
-	local cameraWidth, cameraHeight = game.currentCamera:getDimensions()
-	local cameraMargin = 140
+	game.currentCamera:trackEntity(self.x, self.y, self.width, self.height, 2, 4)
 
-	if self.x * cameraScale <= cameraX + cameraMargin * cameraScale then
-		game.currentCamera:move(-2, 0)
-	elseif (self.x + self.width) * cameraScale >= (cameraX + cameraWidth) - cameraMargin then
-		game.currentCamera:move(2, 0)
-	end
-	if self.y * cameraScale <= cameraY + cameraMargin * cameraScale then
-		game.currentCamera:move(0, -4)
-	elseif (self.y + self.height) * cameraScale >= (cameraY + cameraHeight) - cameraMargin then
-		game.currentCamera:move(0, 4)
-	end
-
-	-- To keep that collision bug from crashing our shit.
+	-- If we don't stop our object from falling off the map, then Lua will go into an infinite loop for some reason related to collision calculation.
 	if self.x < -5 then self.x = 0 end
 	if self.y < -5 then self.y = 0 end
 end
