@@ -93,24 +93,24 @@ function Character:move(deltaX, deltaY)
 	local tileList = {}
 
 	if deltaX > 0 then -- Moving right.
-		self:getIntersectingTiles(self.x, self.width, tileList, tileSize)
+		self:getIntersectingTiles(self.y, self.height, tileList, tileSize)
 		edge = self.x + self.width
 		distanceX = self:checkForCollision("right", edge, tileList, tileSize)
 		self.x = self.x + math.min(deltaX, distanceX)
 	elseif deltaX < 0 then -- Moving left.
-		self:getIntersectingTiles(self.x, self.width, tileList, tileSize)
+		self:getIntersectingTiles(self.y, self.height, tileList, tileSize)
 		edge = self.x
 		distanceX = self:checkForCollision("left", edge, tileList, tileSize)
 		self.x = self.x + math.max(deltaX, distanceX)
 	end
 
 	if deltaY > 0 then -- Moving down.
-		self:getIntersectingTiles(self.y, self.height, tileList, tileSize)
+		self:getIntersectingTiles(self.x, self.width, tileList, tileSize)
 		edge = self.y + self.height
 		distanceY = self:checkForCollision("down", edge, tileList, tileSize)
 		self.y = self.y + math.min(deltaY, distanceY)
 	elseif deltaY < 0 then -- Moving up.
-		self:getIntersectingTiles(self.y, self.height, tileList, tileSize)
+		self:getIntersectingTiles(self.x, self.width, tileList, tileSize)
 		edge = self.y
 		distanceY = self:checkForCollision("up", edge, tileList, tileSize)
 		self.y = self.y + math.max(deltaY, distanceY)

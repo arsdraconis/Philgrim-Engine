@@ -18,7 +18,7 @@ require("player")
 debug = {}
 
 function debug.createTestEntity()
-	debug.testEntity = Player:new(100, 100, 48, 48)
+	debug.testEntity = Player:new(32, 32, 48, 48)
 end
 
 -- Löve's General Callback Functions ==========================================
