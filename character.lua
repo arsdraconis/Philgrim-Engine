@@ -18,13 +18,13 @@ function Character:new(x, y, width, height)
 	return object
 end
 
-function Entity:type()
+function Character:type()
 	-- Returns the type of object this is.
 	return "character"
 end
 
 -- Character Movement Methods =================================================
-function Entity:move(deltaX, deltaY)
+function Character:move(deltaX, deltaY)
 	-- Move the entity through the world.
 	-- TODO: HOLY FUCK this method is UGLY!!!!!
 	-- FIXME: This is buggy as hell.
