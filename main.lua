@@ -11,6 +11,7 @@ require("game")
 require("camera")
 require("map")
 require("entity")
+require("character")
 require("player")
 
 -- Here for experimentation.

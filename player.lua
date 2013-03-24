@@ -8,11 +8,11 @@
 
 -- Player Class
 Player = {}												-- Player object prototype
-Player.mt = setmetatable(Player, { __index = Entity })	-- Derive from Entity.
+Player.mt = setmetatable(Player, { __index = Character })	-- Derive from Character.
 
 -- OO Methods =================================================================
 function Player:new(x, y, width, height)
-	local object = Entity:new(x, y, width, height)
+	local object = Character:new(x, y, width, height)
 	setmetatable(object, { __index = Player })
 	return object
 end
