@@ -57,6 +57,7 @@ function Character:checkForCollision(directionOfMovement, edge, tileList, tileSi
 	local collisionDetected = false
 
 	repeat
+		-- Loop through our tile list and check for collisions.
 		for _, i in pairs(tileList) do
 			if directionOfMovement == "left" or directionOfMovement == "right" then
 				if game.map:getTile(tileLine, i) or tileLine < 1 then
@@ -71,6 +72,7 @@ function Character:checkForCollision(directionOfMovement, edge, tileList, tileSi
 			end
 		end
 
+		-- Set our distance and increment the tile line to check on.
 		if directionOfMovement == "up" or directionOfMovement == "left" then
 			distance = (tileLine * tileSize) - edge
 			tileLine = tileLine - 1

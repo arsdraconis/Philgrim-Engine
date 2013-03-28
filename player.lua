@@ -47,7 +47,7 @@ function Player:update(deltaTime)
 	self:move(0, jumpVelocity)
 
 	-- Move the camera.
-	game.currentCamera:trackEntity(self.x, self.y, self.width, self.height, 2, 4)
+	game.currentCamera:trackEntity(self.x, self.y, self.width, self.height)
 
 	-- If we don't stop our object from falling off the map, then Lua will go into an infinite loop for some reason related to collision calculation.
 	if self.x < -5 then self.x = 0 end
