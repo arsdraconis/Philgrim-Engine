@@ -29,14 +29,14 @@ function Player:update(deltaTime)
 	local newJumpVelocity = 0
 
 	-- Move the player.
-	if love.keyboard.isDown(" ") then
-		-- We use a cubic-ish function to calculate our jump velocities.
-		newJumpVelocity = self:jump(deltaTime)
-	end
 	if love.keyboard.isDown("left") then
 		self:move(-2, 0)
 	elseif love.keyboard.isDown("right") then
 		self:move(2, 0)
+	end
+	if love.keyboard.isDown(" ") then
+		-- We use a cubic-ish function to calculate our jump velocities.
+		newJumpVelocity = self:jump(deltaTime)
 	end
 
 	if newJumpVelocity ~= 0 then

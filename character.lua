@@ -25,7 +25,7 @@ end
 
 -- Collision Detection Methods ================================================
 function Character:getIntersectingTiles(position, dimension, outTileList, tileSize)
-	-- Find the tiles the entity is contained in.
+	-- Returns the tiles the bounding box intersects with.
 	local currentTile = nil
 	local tileInList = false;
 
@@ -55,32 +55,39 @@ function Character:checkForCollision(directionOfMovement, edge, tileList, tileSi
 	local tileLine = math.floor(edge / tileSize)
 	local firstTileLine = tileLine
 	local collisionDetected = false
+	local x, y = nil, nil
 
 	repeat
-		-- Loop through our tile list and check for collisions.
+		-- Loop through our tile list until we find the closest static obstacle.
+		-- FIXME: We shouldn't have to loop forever, just for a set amount of tiles.
 		for _, i in pairs(tileList) do
 			if directionOfMovement == "left" or directionOfMovement == "right" then
-				if game.map:getTile(tileLine, i) or tileLine < 1 then
-					collisionDetected = true
-					break
-				end
+				x, y = tileLine, i
 			elseif directionOfMovement == "up" or directionOfMovement == "down" then
-				if game.map:getTile(i, tileLine) or tileLine < 1 then
-					collisionDetected = true
-					break
-				end
+				x, y = i, tileLine
+			end
+			
+			-- FIXME: The tileLine < 1 is a hack to keep from looping infinitely if we try to jump.
+			if game.map:getTile(x, y) or tileLine < 1 then
+				collisionDetected = true
+				break
 			end
 		end
 
-		-- Set our distance and increment the tile line to check on.
+		-- Change the tile line to check on for the next loop.
 		if directionOfMovement == "up" or directionOfMovement == "left" then
-			distance = (tileLine * tileSize) - edge
 			tileLine = tileLine - 1
 		elseif directionOfMovement == "down" or directionOfMovement == "right" then
-			distance = (tileLine * tileSize) - edge - tileSize
 			tileLine = tileLine + 1
 		end
 	until collisionDetected
+
+	if directionOfMovement == "up" or directionOfMovement == "left" then
+		distance = (tileLine * tileSize) - edge
+	elseif directionOfMovement == "down" or directionOfMovement == "right" then
+		distance = (tileLine * tileSize) - edge - tileSize
+	end
+
 
 	return distance
 end
@@ -93,6 +100,8 @@ function Character:move(deltaX, deltaY)
 	local tileSize = game.map:getTileSize()
 	local edge = nil;
 	local tileList = {}
+
+	-- To support slopes later on, we increment X first, then Y.
 
 	if deltaX > 0 then -- Moving right.
 		self:getIntersectingTiles(self.y, self.height, tileList, tileSize)
