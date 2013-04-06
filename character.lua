@@ -29,7 +29,7 @@ function Character:getIntersectingTiles(position, dimension, outTileList, tileSi
 	local currentTile = nil
 	local tileInList = false;
 
-	for i = 0, dimension do
+	for i = 0, dimension - 1 do
 		-- Calculate the current tile.
 		currentTile = math.floor((position + i) / tileSize)
 
@@ -46,50 +46,42 @@ end
 
 function Character:checkForCollision(directionOfMovement, edge, tileList, tileSize)
 	-- Returns the minimum amount the Character can move in directionOfMovement
-	local distance = nil
-	
+
 	-- Check for valid directionOfMovement
 	assert(directionOfMovement == "up" or "down" or "left" or "right")
 
 	-- Find the tile line we're going to start checking on.
-	local tileLine = math.floor(edge / tileSize)
-	local firstTileLine = tileLine
+	local currentLine = math.floor(edge / tileSize)
+	local nextLineOffset = nil
 	local collisionDetected = false
 	local x, y = nil, nil
+
+	if directionOfMovement == "up" or directionOfMovement == "left" then
+		nextLineOffset =  -1
+	elseif directionOfMovement == "down" or directionOfMovement == "right" then
+		nextLineOffset = 1
+	end
 
 	repeat
 		-- Loop through our tile list until we find the closest static obstacle.
 		-- FIXME: We shouldn't have to loop forever, just for a set amount of tiles.
 		for _, i in pairs(tileList) do
 			if directionOfMovement == "left" or directionOfMovement == "right" then
-				x, y = tileLine, i
+				x, y = currentLine, i
 			elseif directionOfMovement == "up" or directionOfMovement == "down" then
-				x, y = i, tileLine
+				x, y = i, currentLine
 			end
 			
-			-- FIXME: The tileLine < 1 is a hack to keep from looping infinitely if we try to jump.
-			if game.map:getTile(x, y) or tileLine < 1 then
+			-- FIXME: The startLine < 1 is a hack to keep from looping infinitely if we try to jump under open air.
+			if game.map:getTile(x, y) or currentLine < 1 then
 				collisionDetected = true
-				break
 			end
 		end
 
-		-- Change the tile line to check on for the next loop.
-		if directionOfMovement == "up" or directionOfMovement == "left" then
-			tileLine = tileLine - 1
-		elseif directionOfMovement == "down" or directionOfMovement == "right" then
-			tileLine = tileLine + 1
-		end
+		if not collisionDetected then currentLine = currentLine + nextLineOffset end
 	until collisionDetected
 
-	if directionOfMovement == "up" or directionOfMovement == "left" then
-		distance = (tileLine * tileSize) - edge
-	elseif directionOfMovement == "down" or directionOfMovement == "right" then
-		distance = (tileLine * tileSize) - edge - tileSize
-	end
-
-
-	return distance
+	return (currentLine * tileSize - edge)
 end
 
 -- Character Movement Methods =================================================
@@ -101,27 +93,28 @@ function Character:move(deltaX, deltaY)
 	local edge = nil;
 	local tileList = {}
 
-	-- To support slopes later on, we increment X first, then Y.
+	-- To support slopes later on, we increment X first, then Y. If we implement slopes.
+	-- TODO: Find out why this works. Adding tileSize to some of these things fixed it. What? I don't even-
 
 	if deltaX > 0 then -- Moving right.
-		self:getIntersectingTiles(self.y, self.height, tileList, tileSize)
+		self:getIntersectingTiles(self.y + tileSize, self.height, tileList, tileSize)
 		edge = self.x + self.width
-		distanceX = self:checkForCollision("right", edge, tileList, tileSize)
+		distanceX = self:checkForCollision("right", edge + tileSize, tileList, tileSize)
 		self.x = self.x + math.min(deltaX, distanceX)
 	elseif deltaX < 0 then -- Moving left.
-		self:getIntersectingTiles(self.y, self.height, tileList, tileSize)
+		self:getIntersectingTiles(self.y + tileSize, self.height, tileList, tileSize)
 		edge = self.x
 		distanceX = self:checkForCollision("left", edge, tileList, tileSize)
 		self.x = self.x + math.max(deltaX, distanceX)
 	end
 
 	if deltaY > 0 then -- Moving down.
-		self:getIntersectingTiles(self.x, self.width, tileList, tileSize)
+		self:getIntersectingTiles(self.x + tileSize, self.width, tileList, tileSize)
 		edge = self.y + self.height
-		distanceY = self:checkForCollision("down", edge, tileList, tileSize)
+		distanceY = self:checkForCollision("down", edge + tileSize, tileList, tileSize)
 		self.y = self.y + math.min(deltaY, distanceY)
 	elseif deltaY < 0 then -- Moving up.
-		self:getIntersectingTiles(self.x, self.width, tileList, tileSize)
+		self:getIntersectingTiles(self.x + tileSize, self.width, tileList, tileSize)
 		edge = self.y
 		distanceY = self:checkForCollision("up", edge, tileList, tileSize)
 		self.y = self.y + math.max(deltaY, distanceY)

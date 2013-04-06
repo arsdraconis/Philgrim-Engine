@@ -119,7 +119,7 @@ function Camera:draw()
 	end]]
 	game.map:draw() -- Level stuff isn't finished yet, so for debug this is here.
 
-	-- Draw the entities in the game world, back to front.
+	-- Draw the entities in the game world.
 	Entity:drawAll(self.x, self.y)
 
 	love.graphics.pop()

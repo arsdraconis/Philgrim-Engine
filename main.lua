@@ -7,6 +7,7 @@
 ]]
 
 -- Modules
+require("philgrim_debug")
 require("game")
 require("camera")
 require("map")
@@ -14,28 +15,22 @@ require("entity")
 require("character")
 require("player")
 
--- Here for experimentation.
-debug = {}
-
-function debug.createTestEntity()
-	debug.testEntity = Player:new(32, 32, 32, 32)
-end
-
 -- Löve's General Callback Functions ==========================================
-function love.load()
+function love.load(arg)
+  if arg[#arg] == "-debug" then require("mobdebug").start() end
 	print("Loading...")
 	game.init()
 	debug.createTestEntity()
 end
 
 function love.focus(f)
-	if not f then
+	--[[if not f then
 		game.paused = true
 		print(love.graphics.getCaption().." lost focus!")
 	else
 		game.paused = false
 		print(love.graphics.getCaption().." gained focus!")
-	end
+	end]]
 end
 
 function love.quit()
@@ -71,5 +66,6 @@ function love.draw()
 	-- TODO: We don't have a UI. Yet.
 
 	-- Draw any debug crap here.
+	debug.printPlayerCollision()	-- Prints collision information on the screen.
 	if game.showFPS then love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20) end
 end
