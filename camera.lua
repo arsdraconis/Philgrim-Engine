@@ -32,7 +32,8 @@ end
 function Camera:moveWithinMapBounds(newX, newY)
 	-- This is Camera's primitive move method. It makes sure that the values are within map bounds.
 	-- All other movement methods should call it.
-	local mapWidth, mapHeight = game.map:getDimensionsInPixels()
+	-- TODO: Decouple the map access here.
+	local mapWidth, mapHeight = game.foregroundMap:getDimensionsInPixels()
 
 	if newX > mapWidth - (self.width / self.scale) then
 		self.x = mapWidth - (self.width / self.scale)
@@ -114,10 +115,9 @@ function Camera:draw()
 	love.graphics.scale(self.scale)
 
 	-- Draw the map layers, from back to front.
-	--[[for _, currentMap in ipairs(game.currentLevel.maps) do
+	for _, currentMap in ipairs(game.maps) do
 		currentMap:draw()
-	end]]
-	game.map:draw() -- Level stuff isn't finished yet, so for debug this is here.
+	end
 
 	-- Draw the entities in the game world.
 	Entity:drawAll(self.x, self.y)

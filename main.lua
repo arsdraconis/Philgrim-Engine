@@ -55,7 +55,12 @@ function love.update(dt)
 	width = width / scale
 	height = height / scale
 
-	game.map:update(x, y, width, height)
+	--[[for _, currentMap in ipairs(game.maps) do
+		currentMap:update(x, y, width, height)
+	end]]
+	game.maps[1]:update(x/4, y/4, width, height)
+	game.maps[2]:update(0, 0, width, height)
+	game.maps[3]:update(x, y, width, height)
 end
 
 function love.draw()

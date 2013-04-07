@@ -51,7 +51,8 @@ function Player:update(deltaTime)
 	game.currentCamera:trackEntity(self.x, self.y, self.width, self.height)
 
 	-- If we don't stop our object from falling off the map, then Lua will go into an infinite loop for some reason related to collision calculation.
-	local mapWidth, mapHeight = game.map:getDimensionsInPixels()
+	-- TODO: decouple the map access here.
+	local mapWidth, mapHeight = game.foregroundMap:getDimensionsInPixels()
 	if self.x < -5 then self.x = 0 end
 	if self.y < -5 then self.y = 0 end
 	if self.x + self.width > mapWidth   then self.x = mapWidth  - self.width end

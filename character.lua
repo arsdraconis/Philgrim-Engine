@@ -29,6 +29,7 @@ function Character:getIntersectingTiles(position, dimension, outTileList, tileSi
 	local currentTile = nil
 	local tileInList = false;
 
+	-- TODO: So it turns out that - 1 is important. Find out why.
 	for i = 0, dimension - 1 do
 		-- Calculate the current tile.
 		currentTile = math.floor((position + i) / tileSize)
@@ -73,7 +74,8 @@ function Character:checkForCollision(directionOfMovement, edge, tileList, tileSi
 			end
 			
 			-- FIXME: The startLine < 1 is a hack to keep from looping infinitely if we try to jump under open air.
-			if game.map:getTile(x, y) or currentLine < 1 then
+			-- TODO: Decouple the map access here.
+			if game.foregroundMap:getTile(x, y) or currentLine < 1 then
 				collisionDetected = true
 			end
 		end
@@ -89,7 +91,7 @@ function Character:move(deltaX, deltaY)
 	-- Move the entity through the world.
 
 	local distanceX, distanceY = nil, nil
-	local tileSize = game.map:getTileSize()
+	local tileSize = game.foregroundMap:getTileSize()
 	local edge = nil;
 	local tileList = {}
 
