@@ -13,8 +13,3 @@ end
 function debug.createTestEntity()
 	debug.testEntity = Player:new(32, 32, 32, 32)
 end
-
-function debug.printPlayerCollision()
-	-- TODO: Write me!
-	-- Have to print out everything: the horizontal and vertical tileLines, any detected collisions, etc.
-end

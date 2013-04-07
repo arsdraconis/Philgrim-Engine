@@ -66,6 +66,5 @@ function love.draw()
 	-- TODO: We don't have a UI. Yet.
 
 	-- Draw any debug crap here.
-	debug.printPlayerCollision()	-- Prints collision information on the screen.
 	if game.showFPS then love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20) end
 end
