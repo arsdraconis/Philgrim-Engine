@@ -89,6 +89,7 @@ function Map:update(originX, originY, viewportWidth, viewportHeight)
 	originY = math.max( math.min(originY, self.tiles.size * (self.height - viewportHeight) - 1), 1)
 
 	-- This calculates the tile that's in the top right portion of the viewport. We use it to tell us what tiles to draw.
+	-- FIXME: This is fucking up the backgrounds. Why?
 	local tileX = math.max( math.min( math.floor(originX / self.tiles.size) + 1, self.width  - viewportWidth ), 1)
 	local tileY = math.max( math.min( math.floor(originY / self.tiles.size) + 1, self.height - viewportHeight), 1)
 

@@ -88,7 +88,7 @@ end
 
 -- Character Movement Methods =================================================
 function Character:move(deltaX, deltaY)
-	-- Move the entity through the world.
+	-- Move the character through the world.
 
 	local distanceX, distanceY = nil, nil
 	local tileSize = game.foregroundMap:getTileSize()

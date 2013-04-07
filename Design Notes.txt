@@ -4,10 +4,13 @@ Problems
 1.	Do we really need a type identification system for objects? Should we just rely on Lua to
 	choke when something's not the right type?
 2.	To render the map correctly, we need to add 1 to the viewport dimensions in Map:update(). Is this
-	my fuck up?
-3.	There perhaps should be a Character subclass, since not all entities will make use of the movement
-	functions like Player would. We could use this class for NPCs and subclass it for Player and Enemy
-	classes.
+	my fuck up? Probably, yes - as adding backgrounds has shown. I need to make sure I understand the
+	map code.
+3.	I need to decouple code. I must research this.
+4. 	The Entity class shouldn't have the list of all entities. That should be the game table.
+5.	We'll need a Level class pretty soon.
+6.	Collision detection resulted in having to add tileSize to a bunch of parameters passed in
+	Character:move(). This means I don't understand the code. >_>
 
 Map Notes
 The map data is a 1D array. Assuming you want the coordinate (x, y), find the tile using this:
@@ -23,7 +26,7 @@ the whole map in memory.
 
 Entity Notes
 The base entity class will serve as a root object for all entities. It will define prototypes
-and primitive methods and keep a list of all created entities.
+and primitive methods common to all entities.
 
 To subclass Entity, create a constructor like this
 
@@ -34,4 +37,5 @@ function MyEntity:new(x, y, width, height, args...)
 end
 
 Since the Entity constructor sets the metatable to Entity, any functions not implimented in
-MyEntity would be looked up in Entity.
+MyEntity would be looked up in Entity. To subclass MyEntity, the new subclass's metatable
+needs to be set to MyEntity.

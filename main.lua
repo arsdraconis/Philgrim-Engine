@@ -17,20 +17,20 @@ require("player")
 
 -- Löve's General Callback Functions ==========================================
 function love.load(arg)
-  if arg[#arg] == "-debug" then require("mobdebug").start() end
+  --if arg[#arg] == "-debug" then require("mobdebug").start() end
 	print("Loading...")
 	game.init()
 	debug.createTestEntity()
 end
 
 function love.focus(f)
-	--[[if not f then
+	if not f then
 		game.paused = true
 		print(love.graphics.getCaption().." lost focus!")
 	else
 		game.paused = false
 		print(love.graphics.getCaption().." gained focus!")
-	end]]
+	end
 end
 
 function love.quit()
@@ -58,8 +58,9 @@ function love.update(dt)
 	--[[for _, currentMap in ipairs(game.maps) do
 		currentMap:update(x, y, width, height)
 	end]]
+	-- FIXME: This is here while we dick around, but the map update function should take care of this.
 	game.maps[1]:update(x/4, y/4, width, height)
-	game.maps[2]:update(0, 0, width, height)
+	game.maps[2]:update(0, y/4, width, height)
 	game.maps[3]:update(x, y, width, height)
 end
 
