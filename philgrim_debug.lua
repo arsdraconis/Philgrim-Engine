@@ -12,10 +12,11 @@ function debug.createDebugMap()
 	-- Holds our map objects.
 	local maps = {}
 
+	print("Creating debug maps...")
 	-- Create map objects.
-	maps[1] = Map:new(39, 28, backgroundRaw, 1, 1, 1)
-	maps[2] = Map:new(25, 28, moonRaw, 2, 0, 0)
-	maps[3] = Map:new(78, 28, foregroundRaw, 3, 2, 2)
+	maps[1] = Map:new(39, 28, 1, 0.25, 0.25, backgroundRaw)
+	maps[2] = Map:new(25, 28, 2, 0, 0.25, moonRaw)
+	maps[3] = Map:new(78, 28, 3, 1, 1, foregroundRaw)
 
 	-- Load the tilesets for each one.
 	maps[1]:loadTiles("Graphics/Tileset.png", 16)
@@ -24,7 +25,7 @@ function debug.createDebugMap()
 
 	-- Give our maps array to our game table.
 	game.maps = maps
-	game.foregroundMap = game.maps[3]
+	game.foregroundMap = game.maps[3]	-- Hack. Fix me.
 end
 
 function debug.createTestEntity()

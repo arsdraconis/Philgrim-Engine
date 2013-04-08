@@ -10,7 +10,7 @@
 Map = {}
 
 -- OO Methods =================================================================
-function Map:new(width, height, data, zIndex, scrollRateX, scrollRateY)
+function Map:new(width, height , zIndex, scrollRateX, scrollRateY, data)
 	-- Constructor
 	local object = { width = width, height = height, data = data, zIndex = zIndex, scrollRate = { x = scrollRateX, y = scrollRateY } }
 	setmetatable(object, { __index = Map } )
@@ -23,11 +23,11 @@ function Map:getDimensions()
 end
 
 function Map:getTileSize()
-	return self.tiles.size
+	return self.tileSize
 end
 
 function Map:getDimensionsInPixels()
-	return self.width * self.tiles.size, self.height * self.tiles.size
+	return self.width * self.tileSize, self.height * self.tileSize
 end
 
 function Map:getTile(x, y)
@@ -41,8 +41,8 @@ function Map:loadTiles(tilesetImagePath, tileSize)
 
 	-- Create our tile data table.
 	self.tiles = {}
-	self.tiles.size = tileSize
-	self.tiles.batch = nil
+	self.tileSize = tileSize
+	self.tileBatch = nil
 
 	-- Load the image file.
 	self.tiles.tilesetImage = love.graphics.newImage(tilesetImagePath)
@@ -68,50 +68,55 @@ function Map:loadTiles(tilesetImagePath, tileSize)
 
 end
 
-function Map:update(originX, originY, viewportWidth, viewportHeight)
-	-- Updates the map's SpriteBatch based on our position in the world.
-	-- TODO: Should this be merged into draw()?
+function Map:update(camera)
+	-- This calculates what tiles we'll be drawing to the screen.
+	-- It uses the values provided by the camera that gets passed in.
 
-	-- We don't care about actual pixel values in this function!
-	viewportWidth  = viewportWidth  / self.tiles.size
-	viewportHeight = viewportHeight / self.tiles.size	-- I think the thing with the + 1 is with the camera code.
+	-- First we need to get the necessary dimensions figured out.
+	-- We use the camera's dimensions to calculate our viewport in pixels, then convert to tiles.
+	local scale = camera:getScale()
+	local cameraX, cameraY = camera:getPosition()
+	local width, height = camera:getDimensions()
+	-- The -1 at the end prevents "bouncing" when we reach the end of the map.
+	local viewportWidth  = (width / scale)  / self.tileSize - 1
+	local viewportHeight = (height / scale) / self.tileSize - 1
 
-	-- Create a SpriteBatch to store the tiles we're going to draw to screen.
-	if not self.tiles.batch then
-		self.tiles.batch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, viewportWidth * viewportHeight)
+	-- Modify the camera values according to our scroll rate.
+	cameraX = cameraX * self.scrollRate.x
+	cameraY = cameraY * self.scrollRate.y
+
+	-- Next, we need to calculate our origin tile (the tile in the top left of the viewport).
+	local originX = math.max( math.min( math.floor(cameraX / self.tileSize) + 1, self.width  - viewportWidth ), 1)
+	local originY = math.max( math.min( math.floor(cameraY / self.tileSize) + 1, self.height - viewportHeight), 1)
+
+	-- We can optimize our function here by comparing the current origin tile to the one that was used the last time we were called.
+	-- If they're the same, return now.
+
+	-- Then we're going to create a SpriteBatch if one does not already exist.
+	-- If it does exist but the viewport dimensions have changed, we need to recalculate its dimensions.
+	if not self.tileBatch then
+		self.tileBatch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, viewportWidth * viewportHeight)
 	else
 		-- TODO: If the thing already exists but the viewport dimensions have changed, recreate the batch.
 	end
 
-	-- This clamps our values so we don't scroll beyond the edges of the map.
-	-- The - 1 at the end is necessary to keep the map from "bouncing" when you reach the end.
-	originX = math.max( math.min(originX, self.tiles.size * (self.width  - viewportWidth ) - 1), 1)
-	originY = math.max( math.min(originY, self.tiles.size * (self.height - viewportHeight) - 1), 1)
-
-	-- This calculates the tile that's in the top right portion of the viewport. We use it to tell us what tiles to draw.
-	-- FIXME: This is fucking up the backgrounds. Why?
-	local tileX = math.max( math.min( math.floor(originX / self.tiles.size) + 1, self.width  - viewportWidth ), 1)
-	local tileY = math.max( math.min( math.floor(originY / self.tiles.size) + 1, self.height - viewportHeight), 1)
-
-	-- TODO: Possible optimization: check if our map position has changed before doing all this.
-
 	-- Clear the tile batch.
-	self.tiles.batch:clear()
+	self.tileBatch:clear()
 
 	-- Populate the tilebatch using the tiles currently on screen.
-	for y = 0, viewportHeight do
-		for x = 0, viewportWidth do
-			local currentTile = self.width * (tileY + y) + (tileX + x)
+	for y = 0, viewportHeight + 1 do
+		for x = 0, viewportWidth + 1 do
+			local currentTile = self.width * (originY + y) + (originX + x)
 
 			if self.data[currentTile] then
-				self.tiles.batch:addq( self.tiles[ self.data[currentTile] ], (x * self.tiles.size) - (originX % self.tiles.size), (y * self.tiles.size) - (originY % self.tiles.size) )
+				self.tileBatch:addq( self.tiles[ self.data[currentTile] ], (x * self.tileSize) - (cameraX % self.tileSize), (y * self.tileSize) - (cameraY % self.tileSize) )
 			end
 		end
 	end
 
 end
 
-function Map:draw()
+function Map:draw(x, y)
 	-- Merely draws the map.
-	love.graphics.draw(self.tiles.batch)
+	love.graphics.draw(self.tileBatch, x, y)
 end

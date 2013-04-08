@@ -7,10 +7,16 @@ Problems
 	my fuck up? Probably, yes - as adding backgrounds has shown. I need to make sure I understand the
 	map code.
 3.	I need to decouple code. I must research this.
-4. 	The Entity class shouldn't have the list of all entities. That should be the game table.
-5.	We'll need a Level class pretty soon.
-6.	Collision detection resulted in having to add tileSize to a bunch of parameters passed in
+4.	Collision detection resulted in having to add tileSize to a bunch of parameters passed in
 	Character:move(). This means I don't understand the code. >_>
+5.	How are we going to keep track of levels? There should be constants, perhaps in a level
+	table in a file that lists all level names as strings and their source file.
+6.	How are we going to store, set up, and configure the different entities in a level?
+
+Game Table Notes
+Add accessors to the game table to get stuff like the current map, level, camera, etc.
+
+The game table should contain the global entity table. Either that or the Level object.
 
 Map Notes
 The map data is a 1D array. Assuming you want the coordinate (x, y), find the tile using this:
@@ -23,6 +29,12 @@ tileset image gets sliced into quads and stored in a tiles table.
 Every frame, we calculate the map tiles that will be on screen and stick them into tiles.batch,
 which then gets drawn in drawMap(). This keeps us from drawing offscreen tiles while keeping
 the whole map in memory.
+
+We need to find a way to take Z indexes into account while drawing maps.
+
+Map class needs to be refactored. update() gets passed in the x, y in the world and viewport
+width/height, but draw() does not get passed in the position at which we want to draw at. FIX
+THIS. Also, we don't need to clamp map drawing now that the camera does it for us.
 
 Entity Notes
 The base entity class will serve as a root object for all entities. It will define prototypes

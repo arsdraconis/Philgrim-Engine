@@ -24,6 +24,8 @@ function Character:type()
 end
 
 -- Collision Detection Methods ================================================
+-- TODO: Refactor these functions.
+-- IDEA: Combine functions into one. Pass in a map parameter to get tileSize and call getTile().
 function Character:getIntersectingTiles(position, dimension, outTileList, tileSize)
 	-- Returns the tiles the bounding box intersects with.
 	local currentTile = nil
@@ -91,6 +93,7 @@ function Character:move(deltaX, deltaY)
 	-- Move the character through the world.
 
 	local distanceX, distanceY = nil, nil
+	-- TODO: Decouple map access.
 	local tileSize = game.foregroundMap:getTileSize()
 	local edge = nil;
 	local tileList = {}

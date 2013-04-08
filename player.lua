@@ -48,6 +48,7 @@ function Player:update(deltaTime)
 	self:move(0, jumpVelocity)
 
 	-- Move the camera.
+	-- TODO: Decouple camera access.
 	game.currentCamera:trackEntity(self.x, self.y, self.width, self.height)
 
 	-- If we don't stop our object from falling off the map, then Lua will go into an infinite loop for some reason related to collision calculation.
