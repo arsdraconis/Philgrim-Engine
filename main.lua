@@ -50,6 +50,9 @@ function love.update(dt)
 	-- Any entity that responds to user input should implement its behavior in its own update() method.
 	Entity:updateAll(dt)
 
+	-- Move the camera.
+	game.currentCamera:trackEntity(debug.testEntity)
+
 	-- Update the map.
 	for _, currentMap in ipairs(game.maps) do
 		currentMap:update(game.currentCamera)

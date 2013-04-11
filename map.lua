@@ -73,11 +73,13 @@ function Map:update(camera)
 	-- It uses the values provided by the camera that gets passed in.
 
 	-- First we need to get the necessary dimensions figured out.
-	-- We use the camera's dimensions to calculate our viewport in pixels, then convert to tiles.
+	-- We use the camera's dimensions to calculate our viewport size in pixels, then find out how many tiles it will hold.
 	local scale = camera:getScale()
 	local cameraX, cameraY = camera:getPosition()
 	local width, height = camera:getDimensions()
+
 	-- The -1 at the end prevents "bouncing" when we reach the end of the map.
+	-- It's probably indicative of an error with the calculation of the origin tile or the math when calculating the position.
 	local viewportWidth  = (width / scale)  / self.tileSize - 1
 	local viewportHeight = (height / scale) / self.tileSize - 1
 

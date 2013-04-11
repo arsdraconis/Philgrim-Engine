@@ -54,12 +54,14 @@ function Camera:moveWithinMapBounds(newX, newY)
 	end
 end
 
-function Camera:trackEntity(x, y, width, height)
+function Camera:trackEntity(entity)
 	-- Calling this function causes the camera to continuously track an entity (or just a point in space if you want).
 	local xPadding = 160
 	local yPadding = 120  -- Fucking with this will cause the display to fuck up. Try it and see!
 	local cameraWidth = self.width / self.scale
 	local cameraHeight = self.height / self.scale
+	local x, y = entity:getPosition()
+	local width, height = entity:getDimensions()
 
 	if x <= self.x + xPadding then
 		self:move(-(self.x + xPadding - x), 0)
