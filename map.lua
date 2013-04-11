@@ -78,18 +78,17 @@ function Map:update(camera)
 	local cameraX, cameraY = camera:getPosition()
 	local width, height = camera:getDimensions()
 
-	-- The -1 at the end prevents "bouncing" when we reach the end of the map.
-	-- It's probably indicative of an error with the calculation of the origin tile or the math when calculating the position.
-	local viewportWidth  = (width / scale)  / self.tileSize - 1
-	local viewportHeight = (height / scale) / self.tileSize - 1
+	local viewportWidth  = (width / scale)  / self.tileSize
+	local viewportHeight = (height / scale) / self.tileSize
 
 	-- Modify the camera values according to our scroll rate.
 	cameraX = cameraX * self.scrollRate.x
 	cameraY = cameraY * self.scrollRate.y
 
 	-- Next, we need to calculate our origin tile (the tile in the top left of the viewport).
-	local originX = math.max( math.min( math.floor(cameraX / self.tileSize) + 1, self.width  - viewportWidth ), 1)
-	local originY = math.max( math.min( math.floor(cameraY / self.tileSize) + 1, self.height - viewportHeight), 1)
+	-- The + 1 keeps the map from getting jumpy. Why?
+	local originX = math.floor(cameraX / self.tileSize) + 1
+	local originY = math.floor(cameraY / self.tileSize) + 1
 
 	-- We can optimize our function here by comparing the current origin tile to the one that was used the last time we were called.
 	-- If they're the same, return now.

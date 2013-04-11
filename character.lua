@@ -74,7 +74,7 @@ function Character:checkForCollision(directionOfMovement, edge, tileList, tileSi
 			elseif directionOfMovement == "up" or directionOfMovement == "down" then
 				x, y = i, currentLine
 			end
-			
+
 			-- FIXME: The startLine < 1 is a hack to keep from looping infinitely if we try to jump under open air.
 			-- TODO: Decouple the map access here.
 			if game.foregroundMap:getTile(x, y) or currentLine < 1 then

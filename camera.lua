@@ -19,7 +19,7 @@ Camera = {}
 -- OO Methods =================================================================
 function Camera:new(x, y, width, height, scale)
 	-- Constructor
-	local object = { x = x, y = y, width = width, height = height, scale = scale or 1 }
+	local object = { x = x or 1, y = y or 1, width = width, height = height, scale = scale or 1 }
 	setmetatable(object, { __index = Camera })
 	return object
 end

@@ -32,10 +32,6 @@ the whole map in memory.
 
 We need to find a way to take Z indexes into account while drawing maps.
 
-Map class needs to be refactored. update() gets passed in the x, y in the world and viewport
-width/height, but draw() does not get passed in the position at which we want to draw at. FIX
-THIS. Also, we don't need to clamp map drawing now that the camera does it for us.
-
 Entity Notes
 The base entity class will serve as a root object for all entities. It will define prototypes
 and primitive methods common to all entities.
