@@ -6,7 +6,7 @@
 	By Hoover and Phil
 ]]
 
--- Class
+-- Prototype
 Entity = {}					-- Entity object prototype
 Entity.allEntities = {}		-- Class variable to hold all entities
 
@@ -15,6 +15,8 @@ function Entity:new(x, y, width, height)
 	-- Constructor
 	local object = { x = x, y = y, width = width, height = height, lastJumpVelocity = 0, lastJumpFrame = 0, active = true }
 	setmetatable(object, { __index = Entity })
+	-- TODO: This has to be decoupled.
+	-- Game should have an entity creation function that returns the new entity and adds it to its own table.
 	table.insert(Entity.allEntities, object)
 	return object
 end
@@ -38,6 +40,8 @@ function Entity:getDimensions()
 end
 
 -- Global Entity Methods ======================================================
+-- TODO: These first two functions should not be in Entity.
+
 function Entity:drawAll(x, y)
 	-- Draws all the entities in the level. Pass in the camera's position in the world.
 	for _, currentEntity in ipairs(Entity.allEntities) do

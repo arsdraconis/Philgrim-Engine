@@ -10,6 +10,21 @@
 game = {}
 game.cameras = {}
 
+-- Accessors ==================================================================
+function game.getCurrentMap()
+	-- Returns the current map layer the player is on.
+end
+
+function game.getCurrentLevel()
+	-- Returns the current level.
+end
+
+-- Level Functions ============================================================
+function game.loadLevel(level)
+	-- Loads a level and switches to it.
+end
+
+
 -- Camera Functions ===========================================================
 function game.cameras.push(camera)
 	-- Pushes the camera onto the camera stack and makes it the current camera.
@@ -29,6 +44,8 @@ end
 
 -- General Game Functions =====================================================
 function game.init()
+	-- Initializes basic game state.
+
 	-- Set general LÖVE stuff.
 	love.graphics.setBackgroundColor(127, 127, 127)	-- Should this be in Camera?
 
@@ -36,9 +53,6 @@ function game.init()
 	game.paused = false
 	game.showFPS = true
 	game.currentLevel = nil
-
-	-- Set up our map.
-	debug.createDebugMap()
 
 	-- Set up a default camera.
 	local windowWidth, windowHeight = love.graphics.getMode()

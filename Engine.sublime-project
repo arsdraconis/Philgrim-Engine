@@ -4,5 +4,6 @@
 		{
 			"path": "/Users/hoover/Documents/Projects/Code/Philgrim Engine"
 		}
-	]
+	],
+	"build_system": "Love2D"
 }

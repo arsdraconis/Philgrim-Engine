@@ -24,11 +24,15 @@ function Character:type()
 end
 
 -- Collision Detection Methods ================================================
+-- TODO: Refactor these functions.
+-- IDEA: Combine functions into one. Pass in a map parameter to get tileSize and call getTile().
+-- FIXME: These should be in the Map object.
 function Character:getIntersectingTiles(position, dimension, outTileList, tileSize)
 	-- Returns the tiles the bounding box intersects with.
 	local currentTile = nil
 	local tileInList = false;
 
+	-- TODO: So it turns out that - 1 is important. Find out why.
 	for i = 0, dimension - 1 do
 		-- Calculate the current tile.
 		currentTile = math.floor((position + i) / tileSize)
@@ -71,9 +75,10 @@ function Character:checkForCollision(directionOfMovement, edge, tileList, tileSi
 			elseif directionOfMovement == "up" or directionOfMovement == "down" then
 				x, y = i, currentLine
 			end
-			
+
 			-- FIXME: The startLine < 1 is a hack to keep from looping infinitely if we try to jump under open air.
-			if game.map:getTile(x, y) or currentLine < 1 then
+			-- TODO: Decouple the map access here.
+			if game.foregroundMap:getTile(x, y) or currentLine < 1 then
 				collisionDetected = true
 			end
 		end
@@ -86,10 +91,11 @@ end
 
 -- Character Movement Methods =================================================
 function Character:move(deltaX, deltaY)
-	-- Move the entity through the world.
+	-- Move the character through the world.
 
 	local distanceX, distanceY = nil, nil
-	local tileSize = game.map:getTileSize()
+	-- TODO: Decouple map access.
+	local tileSize = game.foregroundMap:getTileSize()
 	local edge = nil;
 	local tileList = {}
 

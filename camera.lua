@@ -19,7 +19,7 @@ Camera = {}
 -- OO Methods =================================================================
 function Camera:new(x, y, width, height, scale)
 	-- Constructor
-	local object = { x = x, y = y, width = width, height = height, scale = scale or 1 }
+	local object = { x = x or 1, y = y or 1, width = width, height = height, scale = scale or 1 }
 	setmetatable(object, { __index = Camera })
 	return object
 end
@@ -32,7 +32,9 @@ end
 function Camera:moveWithinMapBounds(newX, newY)
 	-- This is Camera's primitive move method. It makes sure that the values are within map bounds.
 	-- All other movement methods should call it.
-	local mapWidth, mapHeight = game.map:getDimensionsInPixels()
+
+	-- TODO: Decouple the map access here.
+	local mapWidth, mapHeight = game.foregroundMap:getDimensionsInPixels()
 
 	if newX > mapWidth - (self.width / self.scale) then
 		self.x = mapWidth - (self.width / self.scale)
@@ -52,12 +54,14 @@ function Camera:moveWithinMapBounds(newX, newY)
 	end
 end
 
-function Camera:trackEntity(x, y, width, height)
+function Camera:trackEntity(entity)
 	-- Calling this function causes the camera to continuously track an entity (or just a point in space if you want).
 	local xPadding = 160
 	local yPadding = 120  -- Fucking with this will cause the display to fuck up. Try it and see!
 	local cameraWidth = self.width / self.scale
 	local cameraHeight = self.height / self.scale
+	local x, y = entity:getPosition()
+	local width, height = entity:getDimensions()
 
 	if x <= self.x + xPadding then
 		self:move(-(self.x + xPadding - x), 0)
@@ -106,23 +110,26 @@ end
 -- Other Methods ==============================================================
 function Camera:draw()
 	-- Draws the current scene.
-	-- TODO: Finish me!
 
 	-- Store the current graphics state.
 	love.graphics.push()
 
+	-- Scale the view.
 	love.graphics.scale(self.scale)
 
 	-- Draw the map layers, from back to front.
-	--[[for _, currentMap in ipairs(game.currentLevel.maps) do
-		currentMap:draw()
-	end]]
-	game.map:draw() -- Level stuff isn't finished yet, so for debug this is here.
+	-- TODO: This needs to take the map z order into account. And what about entities?
+	-- TODO: Decouple the access to the maps here.
+	for _, currentMap in ipairs(game.maps) do
+		currentMap:draw(0, 0)
+	end
 
 	-- Draw the entities in the game world.
 	Entity:drawAll(self.x, self.y)
 
+	-- Restore the previous graphics state.
 	love.graphics.pop()
+	--game.paused = true
 end
 
 function Camera:convertScreenToWorld(x, y)

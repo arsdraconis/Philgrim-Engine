@@ -17,20 +17,24 @@ require("player")
 
 -- Löve's General Callback Functions ==========================================
 function love.load(arg)
-  if arg[#arg] == "-debug" then require("mobdebug").start() end
+  --if arg[#arg] == "-debug" then require("mobdebug").start() end
 	print("Loading...")
 	game.init()
+
+	-- Set up our map and test entity.
+	-- TODO: Remove for release.
+	debug.createDebugMap()
 	debug.createTestEntity()
 end
 
 function love.focus(f)
-	--[[if not f then
+	if not f then
 		game.paused = true
 		print(love.graphics.getCaption().." lost focus!")
 	else
 		game.paused = false
 		print(love.graphics.getCaption().." gained focus!")
-	end]]
+	end
 end
 
 function love.quit()
@@ -46,16 +50,14 @@ function love.update(dt)
 	-- Any entity that responds to user input should implement its behavior in its own update() method.
 	Entity:updateAll(dt)
 
-	-- Update the map.
-	-- FIXME: Having to get these values to pass them to the map seems like bad design to me.
-	-- FIXME: This should be in a level update function anyway, it's just here for now while we dick around.
-	local scale = game.currentCamera:getScale()
-	local x, y = game.currentCamera:getPosition()
-	local width, height = game.currentCamera:getDimensions()
-	width = width / scale
-	height = height / scale
+	-- Move the camera.
+	game.currentCamera:trackEntity(debug.testEntity)
 
-	game.map:update(x, y, width, height)
+	-- Update the map.
+	for _, currentMap in ipairs(game.maps) do
+		currentMap:update(game.currentCamera)
+	end
+	-- FIXME: This is here while we dick around, but the map update function should take care of this.
 end
 
 function love.draw()
@@ -63,7 +65,6 @@ function love.draw()
 	game.currentCamera:draw()
 
 	-- Draw any UI here.
-	-- TODO: We don't have a UI. Yet.
 
 	-- Draw any debug crap here.
 	if game.showFPS then love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20) end
