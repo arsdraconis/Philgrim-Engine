@@ -26,6 +26,7 @@ end
 -- Collision Detection Methods ================================================
 -- TODO: Refactor these functions.
 -- IDEA: Combine functions into one. Pass in a map parameter to get tileSize and call getTile().
+-- FIXME: These should be in the Map object.
 function Character:getIntersectingTiles(position, dimension, outTileList, tileSize)
 	-- Returns the tiles the bounding box intersects with.
 	local currentTile = nil

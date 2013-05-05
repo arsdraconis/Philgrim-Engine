@@ -20,7 +20,7 @@ function game.getCurrentLevel()
 end
 
 -- Level Functions ============================================================
-function loadLevel(level)
+function game.loadLevel(level)
 	-- Loads a level and switches to it.
 end
 

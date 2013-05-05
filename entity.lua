@@ -6,7 +6,7 @@
 	By Hoover and Phil
 ]]
 
--- Class
+-- Prototype
 Entity = {}					-- Entity object prototype
 Entity.allEntities = {}		-- Class variable to hold all entities
 
@@ -15,7 +15,8 @@ function Entity:new(x, y, width, height)
 	-- Constructor
 	local object = { x = x, y = y, width = width, height = height, lastJumpVelocity = 0, lastJumpFrame = 0, active = true }
 	setmetatable(object, { __index = Entity })
-	-- TODO: This has to be decoupled and set to Game's entity table.
+	-- TODO: This has to be decoupled.
+	-- Game should have an entity creation function that returns the new entity and adds it to its own table.
 	table.insert(Entity.allEntities, object)
 	return object
 end

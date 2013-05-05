@@ -129,6 +129,7 @@ function Camera:draw()
 
 	-- Restore the previous graphics state.
 	love.graphics.pop()
+	--game.paused = true
 end
 
 function Camera:convertScreenToWorld(x, y)
