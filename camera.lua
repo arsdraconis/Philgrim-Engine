@@ -107,31 +107,7 @@ function Camera:getDimensions()
 	return self.width, self.height
 end
 
--- Other Methods ==============================================================
-function Camera:draw()
-	-- Draws the current scene.
-
-	-- Store the current graphics state.
-	love.graphics.push()
-
-	-- Scale the view.
-	love.graphics.scale(self.scale)
-
-	-- Draw the map layers, from back to front.
-	-- TODO: This needs to take the map z order into account. And what about entities?
-	-- TODO: Decouple the access to the maps here.
-	for _, currentMap in ipairs(game.maps) do
-		currentMap:draw(0, 0)
-	end
-
-	-- Draw the entities in the game world.
-	Entity:drawAll(self.x, self.y)
-
-	-- Restore the previous graphics state.
-	love.graphics.pop()
-	--game.paused = true
-end
-
+-- Utility Methods ============================================================
 function Camera:convertScreenToWorld(x, y)
 	-- TODO: Write me!
 end
@@ -139,4 +115,3 @@ end
 function Camera:convertWorldToScreen(x, y)
 	-- TODO: Write me!
 end
-

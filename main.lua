@@ -46,23 +46,42 @@ function love.update(dt)
 	-- Don't do anything if we're paused.
 	if game.paused then return end
 
-	-- Update entities.
-	-- Any entity that responds to user input should implement its behavior in its own update() method.
-	Entity:updateAll(dt)
+	-- Updates all the entities in the level. Pass in the deltaTime value.
+	for _, currentEntity in ipairs(game.entities) do
+		currentEntity:update(dt)
+	end
 
-	-- Move the camera.
+	-- Update camera position.
 	game.currentCamera:trackEntity(debug.testEntity)
 
 	-- Update the map.
 	for _, currentMap in ipairs(game.maps) do
 		currentMap:update(game.currentCamera)
 	end
-	-- FIXME: This is here while we dick around, but the map update function should take care of this.
 end
 
 function love.draw()
-	-- Tell the camera to draw everything.
-	game.currentCamera:draw()
+	local cameraX, cameraY = game.currentCamera:getPosition()
+	local scale = game.currentCamera:getScale()
+
+	-- Store the current graphics state.
+	love.graphics.push()
+
+	-- Scale the view.
+	love.graphics.scale(scale)
+
+	-- Draw the map layers, from back to front.
+	-- TODO: This needs to take the map z order into account. And what about entities?
+	for _, currentMap in ipairs(game.maps) do
+		currentMap:draw(0, 0)	-- TODO: This just passes in 0s as a position.
+	end
+
+	for _, currentEntity in ipairs(game.entities) do
+		currentEntity:draw(cameraX, cameraY)
+	end
+
+	-- Restore the previous graphics state.
+	love.graphics.pop()
 
 	-- Draw any UI here.
 

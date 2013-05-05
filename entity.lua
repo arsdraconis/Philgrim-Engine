@@ -8,16 +8,13 @@
 
 -- Prototype
 Entity = {}					-- Entity object prototype
-Entity.allEntities = {}		-- Class variable to hold all entities
 
 -- OO Methods =================================================================
 function Entity:new(x, y, width, height)
 	-- Constructor
 	local object = { x = x, y = y, width = width, height = height, lastJumpVelocity = 0, lastJumpFrame = 0, active = true }
 	setmetatable(object, { __index = Entity })
-	-- TODO: This has to be decoupled.
-	-- Game should have an entity creation function that returns the new entity and adds it to its own table.
-	table.insert(Entity.allEntities, object)
+	game.addEntity(object)	-- Add ourselves to the global entity table.
 	return object
 end
 
@@ -39,26 +36,15 @@ function Entity:getDimensions()
 	return self.width, self.height
 end
 
--- Global Entity Methods ======================================================
--- TODO: These first two functions should not be in Entity.
-
-function Entity:drawAll(x, y)
-	-- Draws all the entities in the level. Pass in the camera's position in the world.
-	for _, currentEntity in ipairs(Entity.allEntities) do
-		currentEntity:draw(x, y)
-	end
-end
-
-function Entity:updateAll(deltaTime)
-	-- Updates all the entities in the level. Pass in the deltaTime value.
-	for _, currentEntity in ipairs(Entity.allEntities) do
-		currentEntity:update(deltaTime)
-	end
+-- Entity Methods =============================================================
+function Entity:move(deltaX, deltaY)
+	-- Does nothing
+	return
 end
 
 function Entity:update(deltaTime)
+	if not self.active then return end
 	-- TODO: Write me!
-
 	-- Check and apply gravity here.
 	self:move(0, 4)
 end

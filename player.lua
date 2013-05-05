@@ -24,6 +24,7 @@ end
 
 -- Player Methods =============================================================
 function Player:update(deltaTime)
+	if not self.active then return end
 	-- Gravity
 	local jumpVelocity = 4
 	local newJumpVelocity = 0
@@ -54,9 +55,4 @@ function Player:update(deltaTime)
 	if self.y < -5 then self.y = 0 end
 	if self.x + self.width > mapWidth   then self.x = mapWidth  - self.width end
 	if self.y + self.height > mapHeight then self.y = mapHeight - self.height end
-end
-
-function Player:draw(x, y)
-	if not self.active then return end
-	love.graphics.rectangle("fill", self.x - x, self.y - y, self.width, self.height)
 end

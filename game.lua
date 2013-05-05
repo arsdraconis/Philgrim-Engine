@@ -9,6 +9,7 @@
 -- Globals
 game = {}
 game.cameras = {}
+game.entities = {}
 
 -- Accessors ==================================================================
 function game.getCurrentMap()
@@ -24,22 +25,53 @@ function game.loadLevel(level)
 	-- Loads a level and switches to it.
 end
 
-
--- Camera Functions ===========================================================
-function game.cameras.push(camera)
-	-- Pushes the camera onto the camera stack and makes it the current camera.
-	if camera:type() == "camera" then
-		table.insert(game.cameras, camera)
-		game.currentCamera = game.cameras[ #game.cameras ]
-	else
-		error("game.pushCamera was passed something that was "..camera:type().."!")
-	end
+-- Entity Functions ===========================================================
+function game.addEntity(entity)
+	table.insert(game.entities, entity)
 end
 
-function game.cameras.pop()
-	-- Pops the last camera off the stack and makes the next one the current camera.
-	table.remove(game.cameras)
-	game.currentCamera = game.cameras[ #game.cameras ]
+function game.removeEntity(entity)
+	local position = 0
+
+	for _, currentEntity in ipairs(game.entities) do
+		position = position + 1
+		if game.entities[position] == entity then break end
+	end
+
+	table.remove(game.entities, position)
+end
+
+-- Camera Functions ===========================================================
+function game.addCamera(camera)
+	-- Pushes the camera onto the camera stack and makes it the current camera.
+	if camera:type() ~= "camera" then error("game.addCamera was passed something that was "..camera:type().."!") end
+	table.insert(game.cameras, camera)
+end
+
+function game.removeCamera(camera)
+	if camera:type() ~= "camera" then error("game.removeCamera was passed something that was "..camera:type().."!") end
+
+	local position = 0
+
+	for _, currentEntity in ipairs(game.cameras) do
+		position = position + 1
+		if game.cameras[position] == camera then break end
+	end
+
+	table.remove(game.cameras, position)
+end
+
+function game.setMainCamera(camera)
+	if camera:type() ~= "camera" then error("game.setMainCamera was passed something that was "..camera:type().."!") end
+
+	local position = 0
+
+	for _, currentEntity in ipairs(game.cameras) do
+		position = position + 1
+		if game.cameras[position] == camera then break end
+	end
+
+	game.currentCamera = game.cameras[position]
 end
 
 -- General Game Functions =====================================================
@@ -57,5 +89,6 @@ function game.init()
 	-- Set up a default camera.
 	local windowWidth, windowHeight = love.graphics.getMode()
 	local defaultCamera = Camera:new(1, 1, windowWidth, windowHeight, 2)
-	game.cameras.push(defaultCamera)
+	game.addCamera(defaultCamera)
+	game.setMainCamera(defaultCamera)
 end
