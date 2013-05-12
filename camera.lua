@@ -9,8 +9,6 @@
 	TODO:
 	1. Add functions for converting coordinates from world to screen and vice versa.
 	2. Add more settings, like setting background color, tint/filters, etc.
-	3. We could allow for multiple cameras to draw to the screen (e.g., for picture-in-picture)
-	   if we store the origin at which to draw on the window at.
 ]]
 
 -- Globals

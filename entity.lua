@@ -52,7 +52,8 @@ end
 function Entity:draw(camera)
 	-- Draws the entity but skips inactive ones. Pass in the camera.
 	-- TODO: Write me! Currently just draws a rectangle based on its position and size.
+	local originX, originY = camera:getOriginPosition()
 	local x, y = camera:getPosition()
 	if not self.active then return end
-	love.graphics.rectangle("fill", self.x - x, self.y - y, self.width, self.height)
+	love.graphics.rectangle("fill", originX + self.x - x, originY + self.y - y, self.width, self.height)
 end
