@@ -8,12 +8,12 @@
 
 ## Problems
 1.	Do we really need a type identification system for objects? Should we just rely on Lua to choke when something's not the right type?
-2.	To render the map correctly, we need to add 1 to the viewport dimensions in Map:update(). Is this my fuck up? Probably, yes - as adding backgrounds has shown. I need to make sure I understand the map code. I suspect this is why I had so much trouble with collision detection.
+2.	To render the map correctly, we need to add 1 to the viewport dimensions in Map:update(). Is this my fuck up? YES. See map notes below.
 3.	I need to decouple code. I must research this.
-4.	Collision detection resulted in having to add tileSize to a bunch of parameters passed in Character:move(). This means I don't understand the code. >_>
+4.	Collision detection resulted in having to add tileSize to a bunch of parameters passed in Character:move(). FIXED, sort of. This was due to the above, #2.
 5.	How are we going to keep track of levels? There should be constants, perhaps in a level table in a file that lists all level names as strings and their source file.
 6.	How are we going to store, set up, and configure the different entities in a level?
-7. Background map layer does not render completely. Why?
+7. Background map layer does not render completely. Why? I want to say this is due to #2 as well.
 
 ## Game Table Notes
 Add accessors to the game table to get stuff like the current map, level, camera, etc.
@@ -25,7 +25,11 @@ The camera system can support multiple cameras by setting some as "active" and r
 ## Map Notes
 The map data is a 1D array. Assuming you want the coordinate (x, y), find the tile using this:
 
-	mapWidth * y + x
+	mapWidth * y + x + 1
+
+FIXED: Map coordinates are zero indexed with the origin point at the top left. This means the tile at the top left of the world is coordinate (0,0).
+
+Access to map data is abstracted away in `Map:getTile(x, y)`.
 
 Tilesets are loaded separately to allow us to swap out tilesets without changing map data. The tileset image gets sliced into quads and stored in a tiles table.
 

@@ -31,12 +31,20 @@ function Map:getDimensionsInPixels()
 end
 
 function Map:getTile(x, y)
-	return self.data[self.width * y + x]
+	-- Please note that map coordinates are 0 indexed, with the origin at top left.
+	-- print("Getting tile at index "..self.width * y + x..", position "..x..", "..y)
+	return self.data[self.width * y + x + 1] -- TODO: This line may still have the bug.
 end
 
-function Map:getTileInPixels(x, y)
-	-- TODO: Finish me. Am I even needed?
-	return nil
+function Map:getCoordinatesAtPixel(x, y)
+	x = math.floor(x / self.tileSize)
+	y = math.floor(y / self.tileSize)
+	return x, y
+end
+
+function Map:getTileAtPixel(x, y)
+	-- Am I even needed?
+	return self.data[self:getCoordinatesAtPixel(x, y)]
 end
 
 -- Map Methods ================================================================
@@ -76,7 +84,7 @@ function Map:update(camera)
 	-- Calculate our viewport dimensions.
 	local scale = camera:getScale()
 	local width, height = camera:getDimensions()
-	local viewportWidth  = math.ceil(width / scale  / self.tileSize)
+	local viewportWidth  = math.ceil(width  / scale / self.tileSize)
 	local viewportHeight = math.ceil(height / scale / self.tileSize)
 
 	-- Adjust our drawing position according to our scroll rate.
@@ -85,9 +93,7 @@ function Map:update(camera)
 	cameraY = cameraY * self.scrollRate.y
 
 	-- Next, we need to calculate our origin tile (the tile in the top left of the viewport).
-	-- TODO: The + 1 keeps the map from screwing up. Why?
-	local originX = math.floor(cameraX / self.tileSize) + 1
-	local originY = math.floor(cameraY / self.tileSize) + 1
+	local originX, originY = self:getCoordinatesAtPixel(cameraX, cameraY)
 
 	-- We can optimize our function here by comparing the current camera
 	-- position to the one that was used the last time we were called.
@@ -116,8 +122,7 @@ function Map:update(camera)
 	-- Populate the tilebatch using the tiles currently on screen.
 	for y = 0, viewportHeight do
 		for x = 0, viewportWidth do
-			local currentPosition = self.width * (originY + y) + (originX + x)
-			local currentTile = self.data[currentPosition]
+			local currentTile = self:getTile(originX + x, originY + y)
 
 			if currentTile then
 				self.tileBatch:addq(self.tiles[currentTile], (x * self.tileSize) - (cameraX % self.tileSize), (y * self.tileSize) - (cameraY % self.tileSize) )

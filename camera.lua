@@ -45,8 +45,8 @@ function Camera:moveWithinMapBounds(newX, newY)
 	end
 
 	-- FIXME: The -16 pixels are necessary. Remove them to find out why.
-	if newY > mapHeight - (self.height / self.scale) - 16 then
-		self.y = mapHeight - (self.height / self.scale) - 16
+	if newY > mapHeight - (self.height / self.scale) then
+		self.y = mapHeight - (self.height / self.scale)
 	elseif newY < 1 then
 		self.y = 1
 	else
