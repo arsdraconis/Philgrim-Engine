@@ -11,8 +11,8 @@ Player = {}												-- Player object prototype
 Player.mt = setmetatable(Player, { __index = Character })	-- Derive from Character.
 
 -- OO Methods =================================================================
-function Player:new(x, y, width, height)
-	local object = Character:new(x, y, width, height)
+function Player:new(x, y, width, height, onMap)
+	local object = Character:new(x, y, width, height, onMap)
 	setmetatable(object, { __index = Player })
 	return object
 end
@@ -49,8 +49,7 @@ function Player:update(deltaTime)
 	self:move(0, jumpVelocity)
 
 	-- If we don't stop our object from falling off the map, then Lua will go into an infinite loop for some reason related to collision calculation.
-	-- TODO: decouple the map access here.
-	local mapWidth, mapHeight = game.foregroundMap:getDimensionsInPixels()
+	local mapWidth, mapHeight = self.map:getDimensionsInPixels()
 	if self.x < -5 then self.x = 0 end
 	if self.y < -5 then self.y = 0 end
 	if self.x + self.width > mapWidth   then self.x = mapWidth  - self.width end

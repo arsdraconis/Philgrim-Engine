@@ -14,6 +14,10 @@ function util.makeSize(width, height)
 	return { width = width, height = height }
 end
 
+function util.makePoint(x, y)
+	return { x = x, y = y }
+end
+
 function util.makeRect(x, y, width, height)
 	return { x = x, y = y, width = width, height = height }
 end

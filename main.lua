@@ -7,6 +7,7 @@
 ]]
 
 -- Modules
+require("utilities")
 require("philgrim_debug")
 require("game")
 require("camera")
@@ -43,6 +44,7 @@ end
 
 -- Love's Game Loop Callbacks =================================================
 function love.update(dt)
+	local camera = game.getCurrentCamera()
 	-- Don't do anything if we're paused.
 	if game.paused then return end
 
@@ -52,32 +54,29 @@ function love.update(dt)
 	end
 
 	-- Update camera position.
-	game.currentCamera:trackEntity(debug.testEntity)
+	camera:trackEntity(debug.testEntity)
 
 	-- Update the map.
 	for _, currentMap in ipairs(game.maps) do
-		currentMap:update(game.currentCamera)
+		currentMap:update(camera)
 	end
 end
 
 function love.draw()
-	local cameraX, cameraY = game.currentCamera:getPosition()
-	local scale = game.currentCamera:getScale()
-
 	-- Store the current graphics state.
 	love.graphics.push()
 
 	-- Scale the view.
-	love.graphics.scale(scale)
+	love.graphics.scale(game.currentCamera:getScale())
 
 	-- Draw the map layers, from back to front.
 	-- TODO: This needs to take the map z order into account. And what about entities?
 	for _, currentMap in ipairs(game.maps) do
-		currentMap:draw(0, 0)	-- TODO: This just passes in 0s as a position.
+		currentMap:draw(game.currentCamera)
 	end
 
 	for _, currentEntity in ipairs(game.entities) do
-		currentEntity:draw(cameraX, cameraY)
+		currentEntity:draw(game.currentCamera)
 	end
 
 	-- Restore the previous graphics state.

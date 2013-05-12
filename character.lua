@@ -11,9 +11,9 @@ Character = {}					-- Entity object prototype
 Character.mt = setmetatable(Character, { __index = Entity })	-- Derive from Entity.
 
 -- OO Methods =================================================================
-function Character:new(x, y, width, height)
+function Character:new(x, y, width, height, onMap)
 	-- Constructor
-	local object = Entity:new(x, y, width, height)
+	local object = Entity:new(x, y, width, height, onMap)
 	setmetatable(object, { __index = Character })
 	return object
 end
@@ -26,7 +26,6 @@ end
 -- Collision Detection Methods ================================================
 -- TODO: Refactor these functions.
 -- IDEA: Combine functions into one. Pass in a map parameter to get tileSize and call getTile().
--- FIXME: These should be in the Map object.
 function Character:getIntersectingTiles(position, dimension, outTileList, tileSize)
 	-- Returns the tiles the bounding box intersects with.
 	local currentTile = nil
@@ -94,8 +93,7 @@ function Character:move(deltaX, deltaY)
 	-- Move the character through the world.
 
 	local distanceX, distanceY = nil, nil
-	-- TODO: Decouple map access.
-	local tileSize = game.foregroundMap:getTileSize()
+	local tileSize = self.map:getTileSize()
 	local edge = nil;
 	local tileList = {}
 
@@ -122,7 +120,6 @@ function Character:move(deltaX, deltaY)
 	elseif deltaY < 0 then -- Moving up.
 		self:getIntersectingTiles(self.x, self.width, tileList, tileSize)
 		edge = self.y
-		--print("Will check at "..edge - tileSize.." but y is "..self.y)
 		distanceY = self:checkForCollision("up", edge - tileSize, tileList, tileSize)
 		self.y = self.y + math.max(deltaY, distanceY)
 	end

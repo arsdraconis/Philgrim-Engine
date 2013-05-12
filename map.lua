@@ -33,7 +33,7 @@ end
 function Map:getTile(x, y)
 	-- Please note that map coordinates are 0 indexed, with the origin at top left.
 	-- print("Getting tile at index "..self.width * y + x..", position "..x..", "..y)
-	return self.data[self.width * y + x + 1] -- TODO: This line may still have the bug.
+	return self.data[self.width * y + x + 1]
 end
 
 function Map:getCoordinatesAtPixel(x, y)
@@ -43,15 +43,12 @@ function Map:getCoordinatesAtPixel(x, y)
 end
 
 function Map:getTileAtPixel(x, y)
-	-- Am I even needed?
 	return self.data[self:getCoordinatesAtPixel(x, y)]
 end
 
 -- Map Methods ================================================================
 function Map:loadTiles(tilesetImagePath, tileSize)
 	-- Loads the tileset from an image and breaks them up into individual quads.
-
-	-- Create our tile data table.
 	self.tiles = {}
 	self.tileSize = tileSize
 	self.tileBatch = nil
@@ -81,6 +78,9 @@ function Map:loadTiles(tilesetImagePath, tileSize)
 end
 
 function Map:update(camera)
+	-- Calculates what tiles to draw on screen. Must be called once for each map per update loop.
+	-- Pass in the camera you're using to draw.
+
 	-- Calculate our viewport dimensions.
 	local scale = camera:getScale()
 	local width, height = camera:getDimensions()
@@ -103,7 +103,8 @@ function Map:update(camera)
 	if self.tileBatch == nil then
 		self.tileBatch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, viewportWidth * viewportHeight)
 	elseif self.lastUpdate.viewportWidth ~= viewportWidth or self.lastUpdate.viewportHeight ~= viewportHeight then
-		-- If the thing already exists but the viewport dimensions have changed, recreate the batch.
+		-- If it already exists but the viewport dimensions have changed, recreate the batch.
+		self.tileBatch = nil
 		self.tileBatch = love.graphics.newSpriteBatch(self.tiles.tilesetImage, viewportWidth * viewportHeight)
 	end
 
@@ -132,6 +133,7 @@ function Map:update(camera)
 
 end
 
-function Map:draw(x, y)
+function Map:draw(camera)
+	local x, y = camera:getOriginPosition()
 	love.graphics.draw(self.tileBatch, x, y)
 end

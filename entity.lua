@@ -10,9 +10,9 @@
 Entity = {}					-- Entity object prototype
 
 -- OO Methods =================================================================
-function Entity:new(x, y, width, height)
+function Entity:new(x, y, width, height, onMap)
 	-- Constructor
-	local object = { x = x, y = y, width = width, height = height, lastJumpVelocity = 0, lastJumpFrame = 0, active = true }
+	local object = { x = x, y = y, width = width, height = height,  map = onMap, active = true, }
 	setmetatable(object, { __index = Entity })
 	game.addEntity(object)	-- Add ourselves to the global entity table.
 	return object
@@ -39,7 +39,7 @@ end
 -- Entity Methods =============================================================
 function Entity:move(deltaX, deltaY)
 	-- Does nothing
-	return
+	error("Entity:move() is an abstract method. You should override it in your subclass.")
 end
 
 function Entity:update(deltaTime)
@@ -49,9 +49,10 @@ function Entity:update(deltaTime)
 	self:move(0, 4)
 end
 
-function Entity:draw(x, y)
-	-- Draws the entity but skips inactive ones. Pass in the camera's position in the world.
+function Entity:draw(camera)
+	-- Draws the entity but skips inactive ones. Pass in the camera.
 	-- TODO: Write me! Currently just draws a rectangle based on its position and size.
+	local x, y = camera:getPosition()
 	if not self.active then return end
 	love.graphics.rectangle("fill", self.x - x, self.y - y, self.width, self.height)
 end

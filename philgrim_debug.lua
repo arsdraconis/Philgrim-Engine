@@ -30,5 +30,5 @@ end
 
 function debug.createTestEntity()
 	print("Creating debug player entity...")
-	debug.testEntity = Player:new(64, 64, 32, 32)
+	debug.testEntity = Player:new(64, 64, 32, 32, game.foregroundMap)
 end

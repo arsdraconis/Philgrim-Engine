@@ -20,6 +20,10 @@ function game.getCurrentLevel()
 	-- Returns the current level.
 end
 
+function game.getCurrentCamera()
+	return game.currentCamera
+end
+
 -- Level Functions ============================================================
 function game.loadLevel(level)
 	-- Loads a level and switches to it.
@@ -61,7 +65,7 @@ function game.removeCamera(camera)
 	table.remove(game.cameras, position)
 end
 
-function game.setMainCamera(camera)
+function game.setCurrentCamera(camera)
 	if camera:type() ~= "camera" then error("game.setMainCamera was passed something that was "..camera:type().."!") end
 
 	local position = 0
@@ -88,7 +92,7 @@ function game.init()
 
 	-- Set up a default camera.
 	local windowWidth, windowHeight = love.graphics.getMode()
-	local defaultCamera = Camera:new(1, 1, windowWidth, windowHeight, 2)
+	local defaultCamera = Camera:new(1, 1, util.makeSize(windowWidth, windowHeight), util.makePoint(0, 0), util.makePoint(120, 110), 2)
 	game.addCamera(defaultCamera)
-	game.setMainCamera(defaultCamera)
+	game.setCurrentCamera(defaultCamera)
 end
