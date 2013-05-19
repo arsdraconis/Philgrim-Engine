@@ -96,3 +96,12 @@ function game.init()
 	game.addCamera(defaultCamera)
 	game.setCurrentCamera(defaultCamera)
 end
+
+function game.loadLevel()
+	-- TODO: Write me.
+end
+
+function game.drawUI()
+	-- TODO: Write me.
+end
+

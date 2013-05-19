@@ -83,6 +83,7 @@ function love.draw()
 	love.graphics.pop()
 
 	-- Draw any UI here.
+	game.drawUI()
 
 	-- Draw any debug crap here.
 	if game.showFPS then love.graphics.print("FPS: "..love.timer.getFPS(), 15, 20) end

@@ -107,7 +107,7 @@ function Map:update(camera)
 	local originX, originY = self:getCoordinatesAtPixel(cameraX, cameraY)
 
 	-- We lazily create a SpriteBatch here if one does not already exist.
-	maxTiles = viewportWidth * viewportHeight + 100
+	maxTiles = (viewportWidth + 1) * (viewportHeight + 1)
 
 	if self.tileBatch == nil then
 		self:initTileBatch(maxTiles)
