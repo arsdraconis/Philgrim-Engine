@@ -26,8 +26,9 @@ end
 -- Collision Detection Methods ================================================
 -- TODO: Refactor these functions.
 -- IDEA: Combine functions into one. Pass in a map parameter to get tileSize and call getTile().
-function Character:getIntersectingTiles(position, dimension, outTileList, tileSize)
+function Character:getIntersectingTiles(position, dimension, outTileList)
 	-- Returns the tiles the bounding box intersects with.
+	local tileSize = self.map:getTileSize()
 	local currentTile = nil
 	local tileInList = false;
 
@@ -77,7 +78,7 @@ function Character:checkForCollision(directionOfMovement, edge, tileList, tileSi
 
 			-- FIXME: The startLine < 0 is a hack to keep from looping infinitely if we try to jump under open air.
 			-- TODO: Decouple the map access here.
-			if game.foregroundMap:getTile(x, y) or currentLine < 0 then
+			if self.map:getTile(x, y) or currentLine < 0 then
 				collisionDetected = true
 			end
 		end
@@ -113,12 +114,12 @@ function Character:move(deltaX, deltaY)
 	end
 
 	if deltaY > 0 then -- Moving down.
-		self:getIntersectingTiles(self.x, self.width, tileList, tileSize)
+		self:getIntersectingTiles(self.x, self.width, tileList)
 		edge = self.y + self.height
 		distanceY = self:checkForCollision("down", edge, tileList, tileSize)
 		self.y = self.y + math.min(deltaY, distanceY)
 	elseif deltaY < 0 then -- Moving up.
-		self:getIntersectingTiles(self.x, self.width, tileList, tileSize)
+		self:getIntersectingTiles(self.x, self.width, tileList)
 		edge = self.y
 		distanceY = self:checkForCollision("up", edge - tileSize, tileList, tileSize)
 		self.y = self.y + math.max(deltaY, distanceY)

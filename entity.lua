@@ -12,7 +12,7 @@ Entity = {}					-- Entity object prototype
 -- OO Methods =================================================================
 function Entity:new(x, y, width, height, onMap)
 	-- Constructor
-	local object = { x = x, y = y, width = width, height = height,  map = onMap, active = true, }
+	local object = { x = x, y = y, width = width, height = height, map = onMap, active = true, }
 	setmetatable(object, { __index = Entity })
 	game.addEntity(object)	-- Add ourselves to the global entity table.
 	return object
@@ -34,6 +34,14 @@ end
 
 function Entity:getDimensions()
 	return self.width, self.height
+end
+
+function Entity:setActive(flag)
+	self.active = flag
+end
+
+function Entity:isActive()
+	return self.active
 end
 
 -- Entity Methods =============================================================
