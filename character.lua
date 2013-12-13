@@ -127,7 +127,15 @@ function Character:move(deltaX, deltaY)
 end
 
 function Character:jump(deltaTime)
-	-- Lua has no static variables, so we keep track of our previous jump velocity via the Player object.
-	self.lastJumpVelocity = 0
-	return -4
+	local velocity = -4
+
+	if not self.jumpTime then self.jumpTime = 0 end
+
+	if self.jumpTime >= 0.75 then
+		velocity = 4
+	else
+		self.jumpTime = self.jumpTime + deltaTime
+	end
+
+	return velocity
 end

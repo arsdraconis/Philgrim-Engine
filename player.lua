@@ -25,9 +25,6 @@ end
 -- Player Methods =============================================================
 function Player:update(deltaTime)
 	if not self.active then return end
-	-- Gravity
-	local jumpVelocity = 4
-	local newJumpVelocity = 0
 
 	-- Move the player.
 	if love.keyboard.isDown("left") then
@@ -38,15 +35,12 @@ function Player:update(deltaTime)
 	end
 	if love.keyboard.isDown(" ") then
 		-- We use a cubic-ish function to calculate our jump velocities.
-		newJumpVelocity = self:jump(deltaTime)
+		self:move(0, self:jump(deltaTime))
+	else
+		-- Gravity
+		self.jumpTime = 0
+		self:move(0, 4)
 	end
-
-	if newJumpVelocity ~= 0 then
-		jumpVelocity = newJumpVelocity
-	end
-
-	-- Move based on our jump arc or gravity.
-	self:move(0, jumpVelocity)
 
 	-- If we don't stop our object from falling off the map, then Lua will go into an infinite loop for some reason related to collision calculation.
 	local mapWidth, mapHeight = self.map:getDimensionsInPixels()

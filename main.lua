@@ -21,6 +21,7 @@ function love.load(arg)
   --if arg[#arg] == "-debug" then require("mobdebug").start() end
 	print("Loading...")
 	game.init()
+	--game.loadLevel("titleSequence")
 
 	-- Set up our map and test entity.
 	-- TODO: Remove for release.
@@ -44,9 +45,10 @@ end
 
 -- Love's Game Loop Callbacks =================================================
 function love.update(dt)
-	local camera = game.getCurrentCamera()
 	-- Don't do anything if we're paused.
 	if game.paused then return end
+
+	local camera = game.getCurrentCamera()
 
 	-- Updates all the entities in the level. Pass in the deltaTime value.
 	for _, currentEntity in ipairs(game.entities) do

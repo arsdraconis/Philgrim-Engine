@@ -14,6 +14,7 @@
 3.	How are we going to keep track of levels? There should be constants, perhaps in a level table in a file that lists all level names as strings and their source file.
 4.	How are we going to store, set up, and configure the different entities in a level?
 5. We need to find a way to take Z indexes into account while drawing maps.
+6. We need to find a way to limit the update cycles to stabilize the game when vsync is disabled.
 
 ## Infrastructure
 
